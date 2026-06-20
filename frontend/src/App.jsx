@@ -6,19 +6,20 @@ import NavBar from "./components/NavBar"
 import Trash from "./components/trash"
 import LandingPage from "./components/LandingPage";
 import Login from "./components/Login"
-import SignIn from "./components/SignUp"
+import SignUp from "./components/SignUp";
 function App() {
   const [count, setCount] = useState(0)
   const message="hello";
   const [Active,SetActive]=useState("")
   return (
-   <BrowserRouter>
-   <Routes>
-    <Route path="/" element={<LandingPage />}/>
-    <Route path="/login" element={<Login />}/>
-    <Route path="signup" element={<SignIn />}/>
-   </Routes>
-   </BrowserRouter>
+    <SignUp />
+  //  <BrowserRouter>
+  //  <Routes>
+  //   <Route path="/" element={<LandingPage />}/>
+  //   <Route path="/login" element={<Login />}/>
+  //   <Route path="signup" element={<SignIn />}/>
+  //  </Routes>
+  //  </BrowserRouter>
   )
 }
 
