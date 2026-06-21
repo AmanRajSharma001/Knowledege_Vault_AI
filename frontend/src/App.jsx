@@ -4,7 +4,7 @@ import './App.css'
 import SideBar from "./components/SideBar"
 import NavBar from "./components/NavBar"
 import Trash from "./components/trash"
-import LandingPage from "./components/LandingPage";
+
 import Login from "./components/Login"
 import SignUp from "./components/SignUp";
 function App() {
@@ -14,14 +14,15 @@ function App() {
   const [signupLogin,setSignupLogin] = useState("signup");
   return (
 
-   <BrowserRouter>
-   <Routes>
-    {/* <Route path="/" element={<LandingPage />}/> */}
-    <Route path="/" element={<Login />}/>
-    <Route path="/SignUp" element={<SignUp />}/>
-   </Routes>
-   </BrowserRouter>
-  )
+    <SideBar />
+  //  <BrowserRouter>
+  //  <Routes>
+  //   {/* <Route path="/" element={<LandingPage />}/> */}
+  //   <Route path="/" element={<Login />}/>
+  //   <Route path="/SignUp" element={<SignUp />}/>
+  //  </Routes>
+  //  </BrowserRouter>
+  );
 }
 
 export default App;
