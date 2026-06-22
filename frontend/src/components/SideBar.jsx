@@ -12,7 +12,9 @@ import { FaBookOpen } from "react-icons/fa6";  //book
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 import { BsThreeDots } from "react-icons/bs";
+import { FaUserTie } from "react-icons/fa6";
 function SideBar(){
+    const [userName,setuserName]=useState("Virat")
 //===================movable window==================================== 
     const [width,setWidth]=useState(280);
     const startResize=()=>{
@@ -54,7 +56,8 @@ function SideBar(){
         <div className="sidebar" >
             {/* ======================Movable section================================= */}
             <div className="sidebar-resize"  onMouseDown={startResize} style={{ width: `${width}px` }} >
-                <label>user name </label>
+                
+                <label>{userName}<FaUserTie className="user-icon"/></label>
                 <div className="sidebar-options">
                     <button><GoHome className="home-icon"/>Home</button>
                     <button><IoChatbubbleOutline/></button>
@@ -70,34 +73,64 @@ function SideBar(){
                 </div>
                 {/* ========================Agents section=========================== */}
                 <div className="agents">
-                    <IoIosArrowForward/>
-                    <button onClick={()=>setshowAgent(!showAgent)}>Agent</button>
-                    {showAgent &&(
+                    <div className="agents-header">
+                        {showAgent ? (
+                            <IoIosArrowDown
+                                onClick={() => setshowAgent(false)}
+                            />
+                        ) : (
+                            <IoIosArrowForward
+                                onClick={() => setshowAgent(true)}
+                            />
+                        )}
+                        <button onClick={() => setshowAgent(!showAgent)}>
+                            Agent
+                        </button>
+
+                        <button className="three-dot-options">
+                            <BsThreeDots />
+                        </button>
+                    </div>
+                    {showAgent && (
                         <div className="agent-options">
-                            <button onClick={()=>setshowInput(!showInput)}><FaPlus/> New agent</button>
+                            <button onClick={() => setshowInput(!showInput)}>
+                                <FaPlus />
+                                New agent
+                            </button>
                             {showInput && (
-                                <input 
-                                type="text" 
-                                placeholder="Enter"
-                                value={agentName}
-                                onChange={(e)=>setagentName(e.target.value)}
-                                onKeyDown={(e)=>{
-                                    if(e.key=="Enter"){
-                                        addAgent();
-                                    }
-                                }}
-                                autoFocus
+                                <input
+                                    type="text"
+                                    placeholder="Enter"
+                                    value={agentName}
+                                    onChange={(e) => setagentName(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                            addAgent();
+                                        }
+                                    }}
+                                    autoFocus
                                 />
                             )}
-                            {agents.map((agent,index)=>(
-                                <button key={index}>{agent}</button>
+                            {agents.map((agent, index) => (
+                                <button key={index}>
+                                    {agent}
+                                </button>
                             ))}
                         </div>
-                    )}    
+                    )}
                 </div>
                 {/* ======================Private Section========================*/}
                 <div className="private" >
-                    <button onClick={()=>setshowPrivate(!showPrivate)}>Private</button>
+                    <div className="private-headers">
+                        {showPrivate?(
+                            <IoIosArrowDown onClick={()=>setshowPrivate(false)}/>
+
+                        ):(
+                            <IoIosArrowForward onClick={()=>setshowPrivate(true)}/>
+                        )}
+                        <button onClick={()=>setshowPrivate(!showPrivate)}>Private</button>
+                        <button className="three-dot-options"><BsThreeDots/></button>
+                    </div>
                     {showPrivate && (
                         <div className="private-options">
                             <button><FaBookOpen/>
