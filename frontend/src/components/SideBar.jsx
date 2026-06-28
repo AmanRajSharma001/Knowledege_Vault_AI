@@ -16,6 +16,8 @@ import { FaUserTie } from "react-icons/fa6";
 import { BsPencilSquare } from "react-icons/bs";
 import { RxDoubleArrowLeft } from "react-icons/rx";
 
+// ====================================SIDEBAR RESIZE BAR=========================================
+
 function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,agents,setAgents,privates,setPrivates}) {
     const [filterPages,setFilterPages] = useState(Pages); //later work
     const [userName, setuserName] = useState("Virat");
@@ -34,12 +36,14 @@ function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,age
     useEffect(() => {
         if (!isResizing) return;
 
+        // =======================TAKING MOUSE WIDTH========================
+
         const handleMouseMove = (e) => {
             const deltaX = e.clientX - dragInfo.current.startX;
             const newWidth = dragInfo.current.startWidth + deltaX;
             setWidth(Math.max(220, Math.min(480, newWidth)));
         };
-
+        // =====================WHEN BUTTON IS RELEASED
         const handleMouseUp = () => {
             setIsResizing(false);
         };
@@ -52,6 +56,8 @@ function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,age
             window.removeEventListener("mouseup", handleMouseUp);
         };
     }, [isResizing]);
+
+    // ==============================AGENTS===================================
 
     const [showoptions, setShowOptions] = useState("Home");
 
@@ -71,7 +77,7 @@ function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,age
     const [showPrivateInput, setshowPrivateInput] = useState(false);
     const [privateName, setprivateName] = useState("");
 
-
+    // =======================PRIVATE=====================================
     const addPrivate = () => {
         if (privateName.trim() !== "") {
             const data = [...Pages]
@@ -96,6 +102,7 @@ function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,age
     };
 
     return (
+        // ============================SIDEBAR RESIZE================================
         <div className="sidebar" style={{ width: `${width}px` }}>
             <div className="sidebar-inner">
 
@@ -105,16 +112,18 @@ function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,age
                             <div className="sb-workspace-avatar">
                                 <FaUserTie className="sb-avatar-icon" />
                             </div>
+                            {/* ==============WORKSPACE HEADNIG================ */}
                             <span className="sb-workspace-name">{`${userName}'s Space`}</span>
                             <span><IoIosArrowDown className="sb-arrow-icon" /> </span>
                         </div>
+                            {/*===========BUTTON FINCTION FRO CLOSING SIDE BAR============== */}
                         <div className="sb-workspace-actions">
                             <button className="sb-icon-btn sb-collapse-btn" title="Close sidebar">
                                 <RxDoubleArrowLeft />
                             </button>
                         </div>
                     </div>
-
+                    {/* =======================================SIDEBAR OPTIONS======================================== */}
                     <nav className="sb-nav">
                         <button className={`sb-nav-item${showoptions === "Home" ? " sb-nav-item--active" : ""}`} onClick={() => setShowOptions("Home")}>
                             <GoHome className="sb-nav-icon" />
@@ -143,7 +152,7 @@ function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,age
                 </div>
 
                 <div className="sb-middle">
-
+                    {/* =======================================AGENTS===================================================== */}
                     <div className="sb-section">
                         <div className={`sb-section-header${showAgent ? " sb-section-header--open" : ""}`} onClick={() => setshowAgent(!showAgent)}>
                             <button className="sb-section-arrow">
@@ -178,6 +187,7 @@ function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,age
                         )}
                     </div>
 
+                        {/* ==========================================PRIVATE========================================================== */}
                     <div className="sb-section">
                         <div className={`sb-section-header${showPrivate ? " sb-section-header--open" : ""}`} onClick={() => setshowPrivate(!showPrivate)}>
                             <button className="sb-section-arrow">
@@ -227,6 +237,7 @@ function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,age
                     </div>
                 </div>
 
+                {/* ===================================SIDEBAR BOTTOM================================== */}
                 <div className="sb-bottom">
                     <button className="sb-nav-item">
                         <LuLibraryBig className="sb-nav-icon" />
@@ -241,7 +252,8 @@ function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,age
                         <span className="sb-nav-label">Trash</span>
                     </button>
                 </div>
-
+                    
+                        {/* =====================================SIDEBAR NEW CHAT=============================== */}
                 <div className="sb-footer">
                     <button className="sb-new-chat-btn">
                         <span className="sb-new-chat-label">New Chat</span>

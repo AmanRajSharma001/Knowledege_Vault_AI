@@ -1,0 +1,128 @@
+1 SYSTEM ARCHITECTURE
+react frontend
+ fastapi backend
+ postgresql
+ vector database 
+ llm api
+
+React
+FastAPI
+PostgreSQL
+RAG
+AI Agent
+LLM
+Authentication
+
+
+2 DATABASE ER DIAGRAM ----------------------->
+ user 
+ pages
+ blocks
+ agents
+ chats
+
+users
+pages
+page_blocks
+agents
+chats
+chat_messages
+documents
+embeddings
+
+3.FRONTEND COMPONENT ARCHITECTURE
+
+sidebar 
+header
+editor
+chatpanel
+agentpanel
+
+
+4.PAGE CREATION FLOW
+
+user clicks +
+input title
+react sends post request
+fastapi api
+postgresql
+resopnse
+sidebar updates
+
+
+5 RAG PIPELINE --------------------------->
+
+ document upload 
+ chunking 
+ embedding model
+ vector database
+ similarity search
+ context 
+ llm
+ answer
+
+6 AI AGENT WORKFLOW -------------------------->
+
+ User question
+ agent selection
+ tool calling
+ llm 
+ response
+
+7 AUTHENTICATION FLOW
+ 
+ register
+ login 
+ JWT token 
+ protected API
+ databse
+
+8 DEPLOYMENT ARCHITECTURE ----------------------->
+
+ vercel 
+ react 
+rendr/railway
+ fasstapi
+ supabase
+postgresql 
+open api
+
+9 DATA FLOW DIAGRAM
+
+ sidebar click
+ app statee
+ api request
+ databse
+ response
+ editor render
+
+10 USER JOURNEY DIAGRAM --------------------->
+
+ login 
+ create workspace
+ crete page
+ create agent
+ upload document
+ ask question 
+ recieve answer
+
+
+okay what i am thinking is like 
+
+it will be like a solar system in the middle i will put the app logo then 1 branch goes into the system architecture:- contians just name like jwt then react the fastapi then postgre sql then agent
+
+ 
+
+2 branch goes into the detailed tables for the databases how many tables are created with the primary key and ids 
+
+
+
+3 branch goes into the rag architecture like the user upload pdf how the processing is done 
+
+
+
+4 branch will include login signup jwt but it would be small since it dosent have many thinks then
+
+
+
+5 brnch will i think contain how the files share data to them selves like how the front end is working when button is clicked 
