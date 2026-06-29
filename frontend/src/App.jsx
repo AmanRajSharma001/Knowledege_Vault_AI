@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css'
 import SideBar from "./components/SideBar"
@@ -57,6 +57,19 @@ function MainLayout() {
     });
     console.log(await res.json());
   }
+
+  useEffect(()=>{
+    async function loadData(){
+      const res=await fetch("http://localhost:8000/users");
+      const data=await res.json();
+      console.log(data)
+      setPrivates(data[data.length-1].privates);
+      setAgents(data[data.length-1].agents);
+    }
+  loadData();
+  },[]);      //the square bracket is here because it will let the rednder useEffect onece if i provided a nome inside the square bracket then the useEffect work when there is a change in the name
+  
+  
   const [Pages,setPages] = useState(pageData);
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden',backgroundColor: '#fff'}}>

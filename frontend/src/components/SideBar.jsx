@@ -82,27 +82,27 @@ function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,age
     // =======================PRIVATE=====================================
     const addPrivate = () => {
         if (privateName.trim() !== "") {
-            const data = [...Pages]
-            setPages([
-                {
-                    id: Date.now(),
-                    title: privateName,
-                    icon: "📘",
-                    createdBy: "user_1",
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString(),
-                    lastEditedBy: "Virat",
-                    visibility: "private",
-                    tags: ["Getting Started"],
-                    aiEnabled: true,
-                    children: []
-                },...data
-            ])
+            // const data = [...Pages]
+            // setPages([
+            //     {
+            //         id: Date.now(),
+            //         title: privateName,
+            //         icon: "📘",
+            //         createdBy: "user_1",
+            //         createdAt: new Date().toISOString(),
+            //         updatedAt: new Date().toISOString(),
+            //         lastEditedBy: "Virat",
+            //         visibility: "private",
+            //         tags: ["Getting Started"],
+            //         aiEnabled: true,
+            //         children: []
+            //     },...data
+            // ])
             const newPrivates = [...privates, privateName];
             setPrivates(newPrivates);
             setprivateName("");
             setshowPrivateInput(false);
-            submit(newPrivates, agents);
+            submit(agents,newPrivates);
         }
     };
 

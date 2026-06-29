@@ -40,6 +40,11 @@ def crate_user(user:UserCreate,
     db.refresh(data)
     return data
 
+#now getting data from sql and posting it into the react
+@app.get("/users")
+def get_users(db: Session = Depends(get_db)):
+    return db.query(Users).all()
+
 
 
 

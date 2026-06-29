@@ -4,7 +4,7 @@ from sqlalchemy.orm import DeclarativeBase,Mapped,mapped_column,Session,sessionm
 
 
 USERNAME="postgres"
-PASSWORD= "DeezBoi#ROK"
+PASSWORD= "1234"
 HOST="localhost"
 PORT="5432"
 DB_NAME="finaldb"
