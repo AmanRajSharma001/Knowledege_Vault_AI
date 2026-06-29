@@ -1,13 +1,13 @@
-from sqlalchemy import create_engine,text
+from sqlalchemy import create_engine,text,ARRAY,String
 from sqlalchemy.orm import DeclarativeBase,Mapped,mapped_column,Session,sessionmaker
 
 
 
 USERNAME="postgres"
-PASSWORD= "1234"
+PASSWORD= "DeezBoi#ROK"
 HOST="localhost"
 PORT="5432"
-DB_NAME="heros_db"
+DB_NAME="finaldb"
 temperory_engine=create_engine(f"postgresql+psycopg2://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/postgres")
 
 with temperory_engine.connect() as conn:
@@ -38,9 +38,9 @@ class base(DeclarativeBase):
 
 class Users(base):
     __tablename__="UserData"
-    id:Mapped[int]=mapped_column(primary_key=True)
-    private:Mapped[str]=mapped_column()
-    agents:Mapped[str]=mapped_column()
+    name:Mapped[str]=mapped_column(primary_key=True)
+    privates:Mapped[list[str]]=mapped_column(ARRAY(String), nullable=True)
+    agents:Mapped[list[str]]=mapped_column(ARRAY(String), nullable=True)
 # table created with columns
 base.metadata.create_all(engine)
 

@@ -7,8 +7,9 @@ from typing import List
 from app.test import printshello
 
 class UserCreate(BaseModel):
-    privates:List[str]
-    agents:List[str]
+    name: str
+    privates: List[str]
+    agents: List[str]
 
 app=FastAPI()
 
@@ -30,13 +31,14 @@ def upload():
 def crate_user(user:UserCreate,
                db:Session=Depends(get_db)):
     data=Users(
+        name=user.name,
         privates=user.privates,
         agents=user.agents
     )
     db.add(data)
     db.commit()
     db.refresh(data)
-    return data 
+    return data
 
 
 

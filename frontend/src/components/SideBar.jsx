@@ -18,7 +18,7 @@ import { RxDoubleArrowLeft } from "react-icons/rx";
 
 // ====================================SIDEBAR RESIZE BAR=========================================
 
-function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,agents,setAgents,privates,setPrivates}) {
+function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,agents,setAgents,privates,setPrivates,submit}) {
     const [filterPages,setFilterPages] = useState(Pages); //later work
     const [userName, setuserName] = useState("Virat");
     const [width, setWidth] = useState(270);
@@ -66,9 +66,11 @@ function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,age
     const [agentName, setagentName] = useState("");
     const addAgent = () => {
         if (agentName.trim() !== "") {
-            setAgents([...agents, agentName]);
+            const newAgents = [...agents, agentName];
+            setAgents(newAgents);
             setagentName("");
             setshowInput(false);
+            submit(privates, newAgents);
         }
     };
     const [showArrow, setshowArrow] = useState(false);
@@ -96,8 +98,11 @@ function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,age
                     children: []
                 },...data
             ])
+            const newPrivates = [...privates, privateName];
+            setPrivates(newPrivates);
             setprivateName("");
             setshowPrivateInput(false);
+            submit(newPrivates, agents);
         }
     };
 

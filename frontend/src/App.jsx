@@ -41,23 +41,26 @@ function MainLayout() {
   const [PageTitle,setPageTitle] = useState("New Page");
   const [privates, setPrivates] = useState([]);
   const [agents, setAgents] = useState([]); 
+  const [name, setName] = useState("Virat");
   
-  async function submit() {
-    await fetch("http://localhost:8000/users", {
+  async function submit(updatedPrivates, updatedAgents) {
+    const res = await fetch("http://localhost:8000/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        privates:privates,
-        agents:agents
+        name: name + "_" + Date.now(),
+        privates: updatedPrivates || privates,
+        agents: updatedAgents || agents
       })
     });
+    console.log(await res.json());
   }
   const [Pages,setPages] = useState(pageData);
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden',backgroundColor: '#fff'}}>
-      <SideBar Pages = {Pages} setPages = { setPages } showPage = {showPage} setShowPage = {setShowPage} PageTitle = {PageTitle} setPageTitle = {setPageTitle} agents={agents} setAgents={setAgents} privates={privates} setPrivates={setPrivates}/>
+      <SideBar Pages = {Pages} setPages = { setPages } showPage = {showPage} setShowPage = {setShowPage} PageTitle = {PageTitle} setPageTitle = {setPageTitle} agents={agents} setAgents={setAgents} privates={privates} setPrivates={setPrivates} submit = {submit}/>
       <MainPage Pages = {Pages} showPage = {showPage} PageTitle = {PageTitle} setPageTitle = {setPageTitle} />
       {/* <main style={{ flex: 1, overflow: 'auto', backgroundColor: '#fff'}}>
       </main> */}
