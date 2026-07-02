@@ -1,25 +1,62 @@
-from datetime import datetime, timedelta
+from passlib.context import CryptContext  #it is a bycrpt machine hashes the password
+from jose import jwt
 from jose import JWTError, jwt
+from datetime import datetime, timedelta
 
-SECRET_KEY = "my-super-secret-key"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+from core.config import (
+    SECRET_KEY,
+    ALGORITHM,
+    ACCESS_TOKEN_EXPIRE_MINUTES
+)
+pwd_context=CryptContext(
+    schemes=["bycrpt"],
+    deprecated="auto"
+)
+def hash_password(password: str):
+    return pwd_context.hash(password)
+
+def verify_password(plain_password:str,hashed_password:str):
+    return pwd_context.verify(plain_password,hashed_password)
+
 def create_access_token(data: dict):
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})   #earlieer sub:5 and now ti becomes sub:5 and exp:6:30pm
-    encoded_jwt=jwt.encode(
+    expire = datetime.utcnow() + timedelta(
+        minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+    )
+    to_encode.update(
+        {"exp": expire}
+    )
+    encoded_jwt = jwt.encode(
         to_encode,
         SECRET_KEY,
         algorithm=ALGORITHM
     )
     return encoded_jwt
+def verify_access_token(token: str):
 
-# these functions will be added here
-# hash_password()
+    try:
 
-# verify_password()
+        payload = jwt.decode(
+            token,
+            SECRET_KEY,
+            algorithms=[ALGORITHM]
+        )
 
-# create_access_token()
+        return payload
 
-# verify_token()
+    except JWTError:
+
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid token"
+        )
+
+# here will all these function will come
+# 
+# POST /signup
+
+# POST /login
+
+# POST /refresh
+
+# POST /logout

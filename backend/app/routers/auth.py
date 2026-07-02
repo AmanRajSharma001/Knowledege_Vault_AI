@@ -1,23 +1,70 @@
-from passlib.context import CryptContext  #it is a bycrpt machine hashes the password
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
 
-pwd_context=CryptContext(schemes=["bcrypt"]),
-deprecated="auto"
+from app.database import get_db
+from app.models import User
+from app.schemas import UserCreate, UserResponse,UserLogin, Token
+from app.auth import hash_password,verify_password, create_access_token
+router = APIRouter(
+    prefix="/auth",
+    tags=["Authentication"]
+)
+@router.post("/signup", response_model=UserResponse)
+def signup(user: UserCreate, db: Session = Depends(get_db)):
 
-def hash_password(password:str):
-    return pwd_context.hash(password)
+    existing_user = (
+        db.query(User)
+        .filter(User.email == user.email)
+        .first()
+    )
 
-def verify_password(plain_password,hashed_password):
-    return pwd_context.verify(plain_password,hashed_password)
+    if existing_user:
+        raise HTTPException(
+            status_code=400,
+            detail="Email already registered"
+        )
 
+    hashed_password = hash_password(user.password)
 
+    new_user = User(
+        username=user.user_name,
+        email=user.email_id,
+        password_hash=hashed_password
+    )
 
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
 
-# here will all these function will come
-# 
-# POST /signup
+    return new_user
 
-# POST /login
+@router.post("/login",response_model=Token)
+def login(
+    login_data: UserLogin,
+    db: Session = Depends(get_db)
+):
 
-# POST /refresh
+    user=(db.query(User).filter(User.email_id==login_data.email).first())
 
-# POST /logout
+    if user is None:
+        raise HTTPException(
+            status_code=401,
+            detail="invalid email or password"
+        )
+    if not verify_password(
+        login_data.password,
+        user.password_hash
+    ):
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid email or password"
+        )
+    access_token = create_access_token(
+        data={
+            "sub": str(user.user_id)
+        }
+    )
+    return {
+    "access_token": access_token,
+    "token_type": "bearer"
+}

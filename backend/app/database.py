@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine,text,ARRAY,String
 from sqlalchemy.orm import DeclarativeBase,Mapped,mapped_column,Session,sessionmaker
 from sqlalchemy import ForeignKey, String, DateTime
-from app.config import (
+from backend.app.core.config import (
     USERNAME,
     PASSWORD,
     HOST,

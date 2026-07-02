@@ -1,14 +1,20 @@
-from app.database import engine, Users, get_db,Login
-from sqlalchemy.orm import Session 
-from pydantic import BaseModel, EmailStr, Field
-from typing import List
+from pydantic import BaseModel, EmailStr, Field,ConfigDict
+
 
 class UserCreate(BaseModel):
     email: EmailStr=Field(min_length=3,max_length=30)
-    password:str=Field(min_length=8)
+    password:str=Field(min_length=8,max_length=128)
 
-class SignupUser(BaseModel):
+class UserLogin(BaseModel):
+    email:EmailStr
+    password:str
+
+class UserResponse(BaseModel):
     user_id:int
     user_name:str
-    passwd:str
-    email_id:str
+    email_id:EmailStr
+    model_config = ConfigDict(from_attributes=True)   #from attribute is to allow pydantic to read to user.user_id
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
