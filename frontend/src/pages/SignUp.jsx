@@ -1,24 +1,41 @@
-import React from 'react'
+import React, { useState } from 'react'
+
 import { useNavigate } from "react-router-dom";
 import {SiNotion} from "react-icons/si";
+import { signupUser } from "../api/auth";
 
 function SignUp() {
   const navigate=useNavigate();
-  
+  const [email,setemail]=useState("")
+  const [password,setPassword]=useState("")
+  const handleSignup=async()=>{
+    try{
+      const result=await signupUser({email,password});
+      localStorage.setItem("access_token",result.access_token);
+      console.log(result)
+      navigate("/sidebar");
+    }catch (error){
+
+      console.log(error.response);
+      console.log(error.response?.data);
+      // alert("email alreay existed")
+      // console.error(error)
+    }
+  };
   return (
-    
     <div className='signUpPage'>
       <div className='signUpCard'>
         <SiNotion size={32} className="notion-icon"/>
         <h1>Notion: your AI workspace.</h1>        
         <h2>Sign up with your work email</h2>
         <label>Work email</label>
-        <input type="email" placeholder='name@company.com' value="enter here"></input>
+        <input type="email" placeholder='name@company.com' value={email} onChange={(e)=>setemail(e.target.value)}></input>
+        <input type="password" placeholder='enter password' value={password} onChange={(e)=>setPassword(e.target.value)}/>
         <div className='tipbox'>
           <strong>Tip:Use your work email </strong>(if you have one) so
           it's easier for your team to join you on Notion 
         </div>
-        <button className='continue-btn'>
+        <button className='continue-btn' onClick={()=>handleSignup()}>
           Continue
         </button>
         <div className='divider'>

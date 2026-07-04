@@ -27,8 +27,8 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
     hashed_password = hash_password(user.password)
 
     new_user = User(
-        username=user.user_name,
-        email=user.email_id,
+        username=user.username,
+        email=user.email,
         password_hash=hashed_password
     )
 
@@ -44,7 +44,7 @@ def login(
     db: Session = Depends(get_db)
 ):
 
-    user=(db.query(User).filter(User.email_id==login_data.email).first())
+    user=(db.query(User).filter(User.email==login_data.email).first())
 
     if user is None:
         raise HTTPException(

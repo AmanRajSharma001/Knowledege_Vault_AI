@@ -1,13 +1,18 @@
 from sqlalchemy import create_engine,text,ARRAY,String
 from sqlalchemy.orm import DeclarativeBase,Mapped,mapped_column,Session,sessionmaker
 from sqlalchemy import ForeignKey, String, DateTime
-from backend.app.core.config import (
+from app.core.config import (
     USERNAME,
     PASSWORD,
     HOST,
     PORT,
     DB_NAME,
 )
+print(f"USERNAME = {USERNAME}")
+print(f"PASSWORD = {PASSWORD}")
+print(f"HOST = {HOST}")
+print(f"PORT = {PORT}")
+print(f"DB_NAME = {DB_NAME}")
 temperory_engine=create_engine(f"postgresql+psycopg2://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/postgres")
 
 with temperory_engine.connect() as conn:
@@ -24,7 +29,7 @@ with temperory_engine.connect() as conn:
         print(f"database '{DB_NAME}' created")
     else:
         print(f" database'{DB_NAME}' ALREADY EXISTS")
-
+    
 engine=create_engine(
     f"postgresql+psycopg2://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}"
 )

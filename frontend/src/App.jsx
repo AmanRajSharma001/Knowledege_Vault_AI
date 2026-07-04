@@ -4,8 +4,8 @@ import './App.css'
 import SideBar from "./components/SideBar"
 import NavBar from "./components/NavBar"
 // import Trash from "./components/trash"
-import Login from "./components/Login"
-import SignUp from "./components/SignUp";
+import Login from "./pages/Login"
+import SignUp from "./pages/SignUp";
 import MainPage from './components/MainPage';
 function MainLayout() {
   const pageData = [

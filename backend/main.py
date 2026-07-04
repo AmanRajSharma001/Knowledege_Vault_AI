@@ -1,17 +1,11 @@
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from backend.app.database import engine, Users, get_db,Login
-from sqlalchemy.orm import Session 
-from pydantic import BaseModel
-from typing import List
-from app.test import printshello
+
+from app.database import engine
 from app import models
+from app.routers import auth
 
-
-# class UserCreate(BaseModel):
-#     name: str
-#     privates: List[str]
-#     agents: List[str]
+models.base.metadata.create_all(bind=engine)
 
 app=FastAPI()
 app.add_middleware(
@@ -21,7 +15,38 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-models.Base.metadata.create_all(bind=engine)
+app.include_router(auth.router)
+
+# @app.post("/signup")
+# def signup(user:SignupUser,db:Session=Depends(get_db)):
+#     info=Login(
+#         user_id=user.user_id,
+#         user_name=user.user_name,
+#         passwd=user.passwd,
+#         email_id=user.email_id
+#     )
+#     db.add(info)
+#     db.commit()
+#     db.refresh(info)
+#     return info
+
+# @app.post("/users")
+# def crate_user(user:UserCreate,
+#                db:Session=Depends(get_db)):
+#     data=Users(
+#         name=user.name,
+#         privates=user.privates,
+#         agents=user.agents
+#     )
+#     db.add(data)
+#     db.commit()
+#     db.refresh(data)
+#     return data
+# @app.get("/users")
+# def get_users(db: Session = Depends(get_db)):
+#     return db.query(Users).all()
+
+
 # @app.get("/upload")
 # def upload():
 #     text=printshello()
@@ -32,39 +57,7 @@ models.Base.metadata.create_all(bind=engine)
 #     user_name:str
 #     passwd:str
 #     email_id:str
-
-
-@app.post("/signup")
-def signup(user:SignupUser,db:Session=Depends(get_db)):
-    info=Login(
-        user_id=user.user_id,
-        user_name=user.user_name,
-        passwd=user.passwd,
-        email_id=user.email_id
-    )
-    db.add(info)
-    db.commit()
-    db.refresh(info)
-    return info
-
-@app.post("/users")
-def crate_user(user:UserCreate,
-               db:Session=Depends(get_db)):
-    data=Users(
-        name=user.name,
-        privates=user.privates,
-        agents=user.agents
-    )
-    db.add(data)
-    db.commit()
-    db.refresh(data)
-    return data
-
 #now getting data from sql and posting it into the react
-@app.get("/users")
-def get_users(db: Session = Depends(get_db)):
-    return db.query(Users).all()
-
 
 
 

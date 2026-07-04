@@ -3,13 +3,13 @@ from jose import jwt
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 
-from core.config import (
+from app.core.config import (
     SECRET_KEY,
     ALGORITHM,
     ACCESS_TOKEN_EXPIRE_MINUTES
 )
 pwd_context=CryptContext(
-    schemes=["bycrpt"],
+    schemes=["bcrypt"],
     deprecated="auto"
 )
 def hash_password(password: str):

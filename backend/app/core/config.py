@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-USERNAME=os.getenv("USERNAME")
+USERNAME=os.getenv("POSTGRES_USERNAME")
 PASSWORD= os.getenv("PASSWORD")
 HOST=os.getenv("HOST")
 PORT=os.getenv("PORT")
