@@ -1,4 +1,5 @@
 from passlib.context import CryptContext  #it is a bycrpt machine hashes the password
+from fastapi import HTTPException
 from jose import jwt
 from jose import JWTError, jwt
 from datetime import datetime, timedelta

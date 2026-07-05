@@ -14,7 +14,7 @@ class User(base):
     email:Mapped[str]=mapped_column(String,nullable=False,unique=True,index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     is_active:Mapped[bool]=mapped_column(default=True)
-class Page(base):
+class PrivatePage(base):
     __tablename__="PrivateData"
     user_id:Mapped[int]=mapped_column(ForeignKey("users.user_id"))
     workspace_id:Mapped[int]=mapped_column(default=1)

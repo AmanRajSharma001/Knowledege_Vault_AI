@@ -27,7 +27,7 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
     hashed_password = hash_password(user.password)
 
     new_user = User(
-        username=user.username,
+        username=user.email.split('@')[0],        #from here the error was occuring
         email=user.email,
         password_hash=hashed_password
     )

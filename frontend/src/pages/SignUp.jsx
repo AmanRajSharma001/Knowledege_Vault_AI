@@ -10,16 +10,22 @@ function SignUp() {
   const [password,setPassword]=useState("")
   const handleSignup=async()=>{
     try{
+      console.log(password)
+      console.log(email)
       const result=await signupUser({email,password});
+      console.log(result)
       localStorage.setItem("access_token",result.access_token);
       console.log(result)
       navigate("/sidebar");
-    }catch (error){
+    }catch (error) {
+      console.log("Full error:", error);
+      console.log("Response:", error.response);
+      console.log("Status:", error.response?.status);
+      console.log("Data:", error.response?.data);
 
-      console.log(error.response);
-      console.log(error.response?.data);
-      // alert("email alreay existed")
-      // console.error(error)
+      if (error.response?.data?.detail) {
+        console.log("Validation details:", error.response.data.detail);
+      }
     }
   };
   return (

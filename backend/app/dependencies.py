@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import User
 from app.auth import verify_access_token
+from app.schemas import UserResponse              #added this this also was causing error
 router = APIRouter(
     prefix="/auth",
     tags=["Authentication"]
