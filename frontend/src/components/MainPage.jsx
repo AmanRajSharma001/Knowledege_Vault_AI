@@ -57,16 +57,17 @@ function MainPage({Pages,showPage,PageTitle,setPageTitle}) {
             </div>
             
             <div className='bottom-btn'>
-                Get started with
-                <div className='bottom-options'>
-                    <button><FaRegFaceKiss/>Ask AI</button>
-                    <button><PiFileAudioFill/>AI Meeting Notes </button>
-                    <button><FaTableCells/>Database</button>
-                    <button><LuNotepadText/>Form</button>
-                    <button><TbTriangleSquareCircleFilled/>Templates</button>
-                    <button><BsThreeDots/></button>
+                <div className="bottom-getstarted">
+                    Get started with
+                    <div className='bottom-options'>
+                        <button><FaRegFaceKiss/>Ask AI</button>
+                        <button><PiFileAudioFill/>AI Meeting Notes </button>
+                        <button><FaTableCells/>Database</button>
+                        <button><LuNotepadText/>Form</button>
+                        <button><TbTriangleSquareCircleFilled/>Templates</button>
+                        <button><BsThreeDots/></button>
+                    </div>
                 </div>
-                
             </div>
 
         </div>
