@@ -84,13 +84,14 @@ function MainLayout() {
 function App() {
   const [signupLogin, setSignupLogin] = useState("signup");
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/SignUp" element={<SignUp />} />
-        <Route path="/sideBar" element={<MainLayout />} />
-      </Routes>
-    </BrowserRouter>
+    <MainLayout />
+    // <BrowserRouter>
+    //   <Routes>
+    //     <Route path="/" element={<Login />} />
+    //     <Route path="/SignUp" element={<SignUp />} />
+    //     <Route path="/sideBar" element={<MainLayout />} />
+    //   </Routes>
+    // </BrowserRouter>
   );
 }
 

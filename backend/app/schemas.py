@@ -3,6 +3,7 @@ from pydantic import BaseModel, EmailStr, Field,ConfigDict
 
 class UserCreate(BaseModel):
     # username:str
+    print("reached user create in schema")
     email: EmailStr
     password:str=Field(min_length=6)
     # min_length=6,max_length=128

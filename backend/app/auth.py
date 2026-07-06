@@ -14,12 +14,15 @@ pwd_context=CryptContext(
     deprecated="auto"
 )
 def hash_password(password: str):
+    print("password is hashed")
     return pwd_context.hash(password)
 
 def verify_password(plain_password:str,hashed_password:str):
+    print("password is verified")
     return pwd_context.verify(plain_password,hashed_password)
 
 def create_access_token(data: dict):
+    print("token is created")
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(
         minutes=ACCESS_TOKEN_EXPIRE_MINUTES
@@ -36,7 +39,7 @@ def create_access_token(data: dict):
 def verify_access_token(token: str):
 
     try:
-
+        print("token is verified")
         payload = jwt.decode(
             token,
             SECRET_KEY,

@@ -7,6 +7,7 @@ from sqlalchemy import DateTime
 
 
 class User(base):
+    print("reached user in models ")
     __tablename__="users"
     user_id:Mapped[int]=mapped_column(primary_key=True,autoincrement=True)
     username:Mapped[str]=mapped_column(String,nullable=False)
