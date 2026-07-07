@@ -9,14 +9,11 @@ from pydantic import BaseModel, EmailStr, Field, ConfigDict
 # UserCreate defines the schema for incoming user registration requests.
 # It enforces strict validation rules before our application processes the payload.
 class UserCreate(BaseModel):
-    # user_name is required for signup. We enforce a length constraint between 3 and 50 characters.
-    user_name: str = Field(min_length=3, max_length=50, description="The display name of the user")
-    
-    # EmailStr automatically rejects malformed email strings, throwing a HTTP 422 Unprocessable Entity error.
-    email: EmailStr = Field(description="The primary email address")
-    
-    # We enforce a secure password length (at least 8 characters) on input.
-    password: str = Field(min_length=8, max_length=128, description="User password (min 8 characters)")
+    # username:str
+    print("reached user create in schema")
+    email: EmailStr
+    password:str=Field(min_length=6)
+    # min_length=6,max_length=128
 
 
 # UserLogin defines the schema for credential verification during authentication requests.
@@ -28,17 +25,11 @@ class UserLogin(BaseModel):
 # UserResponse defines the outgoing schema returned to the client.
 # Excluding sensitive details (like 'password_hash') is a critical security best practice.
 class UserResponse(BaseModel):
-    user_id: int
-    user_name: str
-    email_id: EmailStr
-    
-    # ConfigDict allows Pydantic to read ORM objects directly.
-    # By setting 'from_attributes=True', Pydantic can receive a SQLAlchemy 'User' instance (e.g. user.user_id) 
-    # instead of just a raw dictionary, and automatically extract the fields to serialize them into JSON.
-    model_config = ConfigDict(from_attributes=True)
+    user_id:int
+    username:str
+    email:EmailStr
+    model_config = ConfigDict(from_attributes=True)   #from attribute is to allow pydantic to read to user.user_id
 
-
-# Token defines the JSON response structure for successful login actions.
 class Token(BaseModel):
     # The JWT access token string
     access_token: str

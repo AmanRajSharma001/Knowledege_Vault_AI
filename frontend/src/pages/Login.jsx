@@ -1,4 +1,6 @@
 import React from 'react'
+import { useEffect, useState } from 'react'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SiNotion } from "react-icons/si";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple } from "react-icons/fa";
@@ -6,9 +8,24 @@ import { FaMicrosoft } from "react-icons/fa";
 import { GoPasskeyFill } from "react-icons/go";
 import { IoBusinessOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../api/auth";
 function Login() {
     const navigate=useNavigate();
-    const []
+    const [email,setEmail]=useState("")
+    const [password,setPassword]=useState("")
+    const handleLogin=async()=>{
+        try{
+            const result=await loginUser({email,password});
+            localStorage.setItem("access_token",result.access_token);
+            console.log(result)
+            navigate("/sideBar");
+
+        }catch (error){
+            alert("Invalid email or password")
+            console.error(error)
+        }
+    };
+    
   return (
     <div className='login-page'>
         <div className='login-box'>
@@ -20,9 +37,10 @@ function Login() {
             <div className='login-info'>
                 <div className='login-input'>
                     <label htmlFor = "email">Email</label><br/>
-                    <input id = "email" type = "email" placeholder='Enter your email address...' />
+                    <input id = "email" type = "email" placeholder='Enter your email address...' value={email} onChange={(e)=>setEmail(e.target.value)} />
+                    <input type="password" placeholder='password' value={password} onChange={(e)=>setPassword(e.target.value)}/>
                     <p>Use an organization email to easily collaborate with teammates</p>
-                    <button onClick={()=>navigate("/sideBar")}>Continue</button>
+                    <button onClick={()=>handleLogin()}>Continue</button>
                 </div>
                 <div className='login-options'>
                     <fieldset>

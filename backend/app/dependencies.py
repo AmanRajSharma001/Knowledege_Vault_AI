@@ -15,12 +15,8 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import User
 from app.auth import verify_access_token
-# FIX: Imported missing UserResponse schema to resolve NameError in the '/me' route configuration.
-from app.schemas import UserResponse
-
-# We initialize a router instance for auth-related endpoints.
-# - prefix="/auth": Prepends '/auth' to all endpoints defined on this router (e.g. '/auth/me').
-# - tags: Categorizes these endpoints in OpenAPI/Swagger documentation.
+from app.schemas import UserResponse              #added this this also was causing error
+print("dependencies.py entered")
 router = APIRouter(
     prefix="/auth",
     tags=["Authentication"]
@@ -34,21 +30,8 @@ router = APIRouter(
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/auth/login"
 )
-
-# get_current_user acts as a reusable gatekeeper dependency for protecting endpoints.
-# It extracts the token, verifies it, fetches the corresponding user from the database, and returns the User object.
-# If anything fails, it aborts the request by raising an HTTPException.
-def get_current_user(
-    # Depends(oauth2_scheme) extracts the token string from the request headers
-    token: str = Depends(oauth2_scheme),
-    # Depends(get_db) provides a clean database transaction session for this request
-    db: Session = Depends(get_db)
-) -> User:
-    """
-    Dependency injection handler to authenticate requests. Decodes the JWT token,
-    validates the subject claim, and confirms the user exists in the database.
-    """
-    # verify_access_token checks the token signature and returns the payload dict, or raises 401.
+def get_current_user(token: str = Depends(oauth2_scheme),db: Session = Depends(get_db)):
+    print("reached current user in dependencies")
     payload = verify_access_token(token)
     
     # We extract the 'sub' (subject) claim which holds the user's primary key (user_id).

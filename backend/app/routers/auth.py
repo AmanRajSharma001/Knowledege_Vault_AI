@@ -59,8 +59,8 @@ def signup(
     # We instantiate a new SQLAlchemy 'User' instance mapping fields from the UserCreate schema.
     # FIX: Mapped columns correctly to user_name and email_id (was username and email, which threw TypeErrors).
     new_user = User(
-        user_name=user.user_name,
-        email_id=user.email,
+        username=user.email.split('@')[0],        #from here the error was occuring
+        email=user.email,
         password_hash=hashed_password
     )
 
@@ -87,15 +87,9 @@ def login(
     login_data: UserLogin,
     db: Session = Depends(get_db)
 ):
-    """
-    Authenticates a user.
-    Validates credentials, verifies password bcrypt hash, and issues a JWT token.
-    """
-    # Retrieve the user by email
-    # FIX: Filter corrected to query on User.email_id (was User.email_id == login_data.email).
-    user = db.query(User).filter(User.email_id == login_data.email).first()
 
-    # If no user matches the email, we return a 401 Unauthorized exception.
+    user=(db.query(User).filter(User.email==login_data.email).first())
+
     if user is None:
         raise HTTPException(
             status_code=401,

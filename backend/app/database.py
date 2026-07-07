@@ -1,49 +1,45 @@
-# SQLAlchemy is the Object-Relational Mapper (ORM) library we use to translate Python classes into SQL tables and queries.
-from sqlalchemy import create_engine, text
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from sqlalchemy import create_engine,text,ARRAY,String
+from sqlalchemy.orm import DeclarativeBase,Mapped,mapped_column,Session,sessionmaker
+from sqlalchemy import ForeignKey, String, DateTime
+from app.core.config import (
+    USERNAME,
+    PASSWORD,
+    HOST,
+    PORT,
+    DB_NAME,
+)
+print(f"USERNAME = {USERNAME}")
+print(f"PASSWORD = {PASSWORD}")
+print(f"HOST = {HOST}")
+print(f"PORT = {PORT}")
+print(f"DB_NAME = {DB_NAME}")
+temperory_engine=create_engine(f"postgresql+psycopg2://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/postgres")
 
-# We import database parameters from our configuration module.
-# The 'app.core.config' absolute package structure assumes uvicorn runs from the 'backend' folder.
-from app.core.config import USERNAME, PASSWORD, HOST, PORT, DB_NAME
-
-# PROBLEM: Executing database creation commands directly at the module root causes side-effects during import.
-# SOLUTION: We wrap this logic in a function called by our FastAPI startup lifespan, ensuring import-safety.
-def create_database_if_not_exists():
-    """
-    Connects to the default 'postgres' database administrative channel and checks if the targeted DB_NAME exists.
-    If not, it executes 'CREATE DATABASE' to initialize it automatically.
-    """
-    # Create a temporary engine connected to the default administrative 'postgres' database
-    # The 'psycopg2' library is the PostgreSQL database driver that handles low-level socket connections and protocol communication.
-    temp_engine = create_engine(
-        f"postgresql+psycopg2://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/postgres",
-        # AUTOCOMMIT isolation level is required because PostgreSQL does not allow running 'CREATE DATABASE' statements inside an active transaction block.
-        isolation_level="AUTOCOMMIT"
+with temperory_engine.connect() as conn:
+    conn.execution_options(isolation_level="AUTOCOMMIT")
+    result=conn.execute(
+        text(f"SELECT 1 FROM pg_database WHERE datname='{DB_NAME}'")
     )
+    exists=result.scalar()
+    # or options
+    # row=results.fetchone()
+
+    if not exists:
+        conn.execute(text(f"CREATE DATABASE {DB_NAME}"))
+        print(f"database '{DB_NAME}' created")
+    else:
+        print(f" database'{DB_NAME}' ALREADY EXISTS")
     
-    with temp_engine.connect() as conn:
-        # text() converts a raw string query into a SQLAlchemy Executable object, preventing arbitrary string execution pitfalls.
-        # We query the pg_database administrative catalog to check if the target database exists.
-        result = conn.execute(
-            text(f"SELECT 1 FROM pg_database WHERE datname = '{DB_NAME}'")
-        )
-        exists = result.scalar() # returns the first column of the first row (1) if it exists, or None.
-
-        if not exists:
-            conn.execute(text(f"CREATE DATABASE {DB_NAME}"))
-            print(f"Database '{DB_NAME}' created successfully.")
-        else:
-            print(f"Database '{DB_NAME}' already exists.")
-
-# We create the primary SQLAlchemy engine instance. The engine represents the core database socket pool manager.
-# It acts as the pipeline that sends SQL statements to the database and receives the results.
-engine = create_engine(
+engine=create_engine(
     f"postgresql+psycopg2://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}"
 )
+with engine.connect() as conn:
+    print("connected to your database successfully")
+    print("databse has been worked")
 
-# DeclarativeBase is the foundations class for defining our SQLAlchemy ORM models.
-# By inheriting from Base, our Python classes are registered with a schema mapping catalog, enabling table metadata generation.
-class Base(DeclarativeBase):
+# base as a blueprint
+
+class base(DeclarativeBase):
     pass
 
 # sessionmaker binds the engine to a session class factory. 
