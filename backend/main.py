@@ -1,19 +1,42 @@
+# FastAPI is the core web framework class used to build our API.
+# Depends: The dependency injection helper.
 from fastapi import FastAPI, Depends
+
+# CORSMiddleware is a security middleware that manages Cross-Origin Resource Sharing (CORS).
+# Since our React frontend runs on 'http://localhost:5173' and our FastAPI backend runs on 'http://localhost:8000',
+# browsers block requests unless CORS is explicitly configured. We allow our React port to make requests.
 from fastapi.middleware.cors import CORSMiddleware
-from backend.app.database import engine, Users, get_db,Login
-from sqlalchemy.orm import Session 
-from pydantic import BaseModel
+
+# Session handles SQLAlchemy database queries and transactions.
+from sqlalchemy.orm import Session
 from typing import List
-from app.test import printshello
-from app import models
 
+# We import our database configurations and engine setup.
+# - Base: The declarative base containing metadata for tables.
+# - engine: The database engine connection manager.
+# - get_db: Dependency providing connection sessions per request.
+# - create_database_if_not_exists: Safe DB creation function.
+from app.database import engine, get_db, create_database_if_not_exists, Base
 
-# class UserCreate(BaseModel):
-#     name: str
-#     privates: List[str]
-#     agents: List[str]
+# We import the User model and its response schemas.
+from app.models import User
+from app.schemas import UserResponse
 
-app=FastAPI()
+# We import the route blueprints (APIRouters) for authentication and token validation.
+from app.routers.auth import router as auth_router
+from app.dependencies import router as me_router
+
+# Initialize the core FastAPI app instance.
+app = FastAPI(
+    title="Knowledge Vault AI Backend",
+    description="Secure FastAPI Backend with PostgreSQL, SQLAlchemy, and JWT Authentication.",
+    version="1.0.0"
+)
+
+# Configure CORS so our React frontend can interact with the backend API.
+# - allow_origins: Specifies the list of allowed origins.
+# - allow_credentials: Allow browser cookies to be shared (important for stateful login).
+# - allow_methods/headers: Allow all HTTP verbs (GET, POST, etc.) and standard headers.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -21,203 +44,36 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-models.Base.metadata.create_all(bind=engine)
-# @app.get("/upload")
-# def upload():
-#     text=printshello()
-#     print("end point hit")
-#     return{"message":text}
-# class SignupUser(BaseModel):
-#     user_id:int
-#     user_name:str
-#     passwd:str
-#     email_id:str
+
+# Run database checks at startup.
+# This function automatically creates the target PostgreSQL database if it does not exist.
+create_database_if_not_exists()
+
+# Base.metadata.create_all automatically generates database tables in PostgreSQL.
+# It reads all SQLAlchemy models (User, Page, Agent) that inherit from 'Base' and creates
+# their tables if they are missing in the schema.
+Base.metadata.create_all(bind=engine)
+
+# Include the routers (endpoints) in the main FastAPI application.
+# This registers all path operations from routers/auth.py and dependencies.py.
+app.include_router(auth_router)
+app.include_router(me_router)
+
+# Basic diagnostic routes to verify database connection and integration.
+
+@app.get("/")
+def read_root():
+    """
+    Root endpoint for service health diagnostics.
+    """
+    return {"message": "Knowledge Vault AI Backend is running successfully!"}
 
 
-@app.post("/signup")
-def signup(user:SignupUser,db:Session=Depends(get_db)):
-    info=Login(
-        user_id=user.user_id,
-        user_name=user.user_name,
-        passwd=user.passwd,
-        email_id=user.email_id
-    )
-    db.add(info)
-    db.commit()
-    db.refresh(info)
-    return info
-
-@app.post("/users")
-def crate_user(user:UserCreate,
-               db:Session=Depends(get_db)):
-    data=Users(
-        name=user.name,
-        privates=user.privates,
-        agents=user.agents
-    )
-    db.add(data)
-    db.commit()
-    db.refresh(data)
-    return data
-
-#now getting data from sql and posting it into the react
-@app.get("/users")
+@app.get("/users", response_model=List[UserResponse])
 def get_users(db: Session = Depends(get_db)):
-    return db.query(Users).all()
-
-
-
-
-# class Base(DeclarativeBase):
-#     pass
-
-
-# class Hero(Base):
-#     __tablename__ = "heroes"
-
-#     id: Mapped[int] = mapped_column(primary_key=True)
-#     name: Mapped[str] = mapped_column(String(50))
-#     age: Mapped[int] = mapped_column()
-
-
-# Base.metadata.create_all(engine)
-
-# with Session(engine) as session:
-#     hero = Hero(name="Thor", age=1500)
-
-#     session.add(hero)
-#     session.commit()
-
-# with Session(engine) as session:
-#     heroes = session.query(Hero).all()
-
-#     for hero in heroes:
-#         print(hero.id, hero.name, hero.age)
-
-
-# with Session(engine) as session:
-#     hero=Hero(name="ironman",age=45)
-#     session.add(hero)
-#     session.commit()
-
-# with Session(engine) as session:
-#     heroes=session.query(Hero).all()
-#     for hero in heroes:
-#         print(hero.id,hero.name,hero.age)
-
-# SessionLocal = sessionmaker(bind=engine)
-
-# from app.database import engine,base
-# from sqlalchemy import String
-# from sqlalchemy.orm import DeclarativeBase,Mapped,mapped_column,Session,sessionmaker
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# from fastapi import FastAPI
-# from app.test import printshello
-# from fastapi.middleware.cors import CORSMiddleware
-# app=FastAPI()
-
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["http://localhost:5173"],
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
-# @app.get("/upload")
-# def upload():
-#     text=printshello()
-#     print("end point hit")
-#     return{"message":text}
-
-# from fastapi import FastAPI,Response,status
-# from fastapi.params import Body
-# from pydantic import BaseModel
-# from typing import Optional
-# from random import randrange
-# app=FastAPI()
-# @app.get("/")
-# class Post(BaseModel):
-#     title:str
-#     content:str
-#     published:bool= True
-#     rating :Optional[int]=None
-# my_posts=[{"title":"title of post 1","content":"content of post 2","id":1},
-#           {"title":"faviourte food","content":"i Like pizza","id":2}]
-
-# def find_id(id):
-#     for p in my_posts:
-#         if p["id"]==id:
-#             return p
-        
-# def find_index_post(id):
-#     for i ,p in enumerate(my_posts):
-#         if p['id']==id:
-#             return i
-        
-# def root():
-#     return{"message":"hello world"}
-
-# @app.get("/posts")
-# def get_posts():
-#     return{"data":my_posts}
-
-# @app.post("/createposts")
-# def create_post(payLoad:dict=Body(...)):
-#     print(payLoad)
-
-#     return{"newpost":f"title{payLoad['content']} content :{payLoad['title']}"}
-# work as a list
-
-# @app.post("/posts")
-# def create_post(post:Post):
-#     post_dict=post.dict()
-#     post_dict['id']=randrange(0,100000)
-#     my_posts.append(post_dict)
-#     return {"data":post_dict}
-
-# @app.get("/posts/latest")
-# def get_latest_post():
-#     post=my_posts[len(my_posts)-1]
-#     return{"detail":post}
-
-# @app.get("/posts/{id}")
-# def get_post(id:int,response:Response):
-#     post=find_id(id)
-#     if not post:
-#         response.status_code=status.HTTP_404_NOT_FOUND
-#         return {'message':f"post with id was not found"}
-#     return{"post_detailj":post}
-
-# @app.get('/posts')
-# def get_post(id:int,response:Response):
-#     post=find_id(id)
-#     if not post:
-#         raise HTTPException(status=status.HTTP_404_NOT_FOUND,detail=f"post with id:{id}was not found")
-#     return {"post detail":post}
-
-# @app.delete('/posts/{id}')
-# def delete_post(id):
-    #deleting post
-    #find the index in the array that has required id
-    #
-    # index=find_index_post(id)
-    # return {'message':"post succesfully deleted"}
+    """
+    Admin diagnostic route that returns all users in the system.
+    Demonstrates how SQLAlchemy reads multiple records from the database.
+    """
+    # db.query(User).all() translates to 'SELECT * FROM users' and returns a list of User objects.
+    return db.query(User).all()
