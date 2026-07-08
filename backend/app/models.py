@@ -36,12 +36,12 @@ class Agent(base):
 
 class Page(base):
     __tablename__ = "PageData"
-    page_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.user_id"),nullable=False)
-    workspace_id: Mapped[int] = mapped_column(default=1)
+    page_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     title: Mapped[str] = mapped_column(default="New Page")
-    # "private" or "agent"
     page_type: Mapped[str] = mapped_column(nullable=False)
+    page_data:Mapped[str]=mapped_column()
+    workspace_id: Mapped[int] = mapped_column(default=1)
     # NULL = top-level page
     parent_page_id: Mapped[int | None] = mapped_column(ForeignKey("PageData.page_id"),nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime,default=datetime.utcnow)

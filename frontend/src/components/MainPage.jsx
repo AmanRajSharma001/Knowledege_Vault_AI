@@ -12,14 +12,36 @@ import { FaRegStar } from 'react-icons/fa6';
 import { AiOutlineLink } from 'react-icons/ai';
 import { SlLock } from 'react-icons/sl';
 import { MdOutlineAddReaction, MdOutlineAddPhotoAlternate } from 'react-icons/md';
+import { FaFileUpload } from 'react-icons/fa';
+import { page_data_title } from "../api/auth";
 
 function MainPage({Pages,showPage,PageTitle,setPageTitle}) {
     const showRealPage = Pages.find((x)=>x.id == showPage);
     console.log(showRealPage)
-    const [pagename,setPagename]=useState("")
-    const [column,setColumn]=useState("Private")
-    const [dataEntered,setDataentered]=useState("")
     const [showHoverBar,setShowHoverBar]=useState(false)
+    const [column,setColumn]=useState("Private")
+    const [pagename,setPagename]=useState("")
+    const [dataEntered,setDataentered]=useState("")
+    const [user_id,setUser_id]=useState(1)
+    const [page_id,setPage_id]=useState(1)
+    const [pagetype,setPagetype]=useState("private")
+    const [parent_page_id,setParentPageId]=useState(0)
+    const datastored=async()=>{
+        // userid we will get from local storage
+        try{
+            const result=await page_data_title({user_id,page_id,pagename,pagetype,dataEntered,parent_page_id}) 
+            console.log(result)
+        }
+        catch(error){
+            console.log("Full error:", error);
+            console.log("Response:", error.response);
+            console.log("Status:", error.response?.status);
+            console.log("Data:", error.response?.data);
+            if (error.response?.data?.detail) {
+                console.log("Validation details:", error.response.data.detail);
+            }
+        }
+    }
 
     return (
         <div className='mainpage'>
@@ -31,6 +53,7 @@ function MainPage({Pages,showPage,PageTitle,setPageTitle}) {
                 </div>
                 <div className='top-right-btn'>
                     <button className='share-btn'><SlLock/>Share<IoIosArrowDown/></button>
+                    <button  onClick={()=>datastored()}><FaFileUpload/></button>
                     <button><AiOutlineLink/></button>
                     <button><FaRegStar/></button>
                     {/* <button><FiUpload/></button>
@@ -53,6 +76,7 @@ function MainPage({Pages,showPage,PageTitle,setPageTitle}) {
                 <div className='main-middle'>
                     <input className='page-title-input' type="text" placeholder="New Page" value={pagename} onChange={(e)=>setPagename(e.target.value)}/>
                     <input className='page-content-input' type="text" placeholder="Press 'space' for AI or '/' for commands" value={dataEntered} onChange={(e)=>setDataentered(e.target.value)}/>
+                    
                 </div>
             </div>
             

@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models import User
-from app.schemas import UserCreate, UserResponse,UserLogin, Token
+from app.models import User,Page
+from app.schemas import UserCreate, UserResponse,UserLogin, Token,PageData,PageResponse
 from app.auth import hash_password,verify_password, create_access_token
 router = APIRouter(
     prefix="/auth",
@@ -68,3 +68,18 @@ def login(
     "access_token": access_token,
     "token_type": "bearer"
 }
+@router.post("/page_data_title",response_model=PageResponse)
+def page_data_title(user:PageData,db: Session = Depends(get_db)):
+    new_data=Page(
+        user_id=user.user_id,
+        page_id=user.page_id,
+        title=user.title,
+        page_type=user.page_type,
+        page_data=user.page_data,
+        parent_page_id=user.parent_page_id
+
+    )
+    db.add(new_data)
+    db.commit()
+    db.refresh(new_data)
+    return new_data

@@ -21,3 +21,19 @@ class UserResponse(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+class PageData(BaseModel):
+    user_id:int
+    page_id:int
+    title:str
+    page_type:str
+    page_data:str
+    parent_page_id:int
+# ana bhi yhi chaiye jana bhi yi chahiye
+class PageResponse(BaseModel):
+    user_id:int
+    page_id:int
+    title:str
+    page_type:str
+    page_data:str
+    parent_page_id:int
