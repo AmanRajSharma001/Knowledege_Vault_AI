@@ -18,7 +18,8 @@ import { RxDoubleArrowLeft } from "react-icons/rx";
 
 // ====================================SIDEBAR RESIZE BAR=========================================
 
-function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,agents,setAgents,privates,setPrivates,submit}) {
+function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,
+    agents,setAgents,privates,setPrivates,submit,pagename,setPagename}) {
     const [filterPages,setFilterPages] = useState(Pages); //later work
     const [userName, setuserName] = useState("Virat");
     const [width, setWidth] = useState(270);
@@ -67,7 +68,10 @@ function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,age
     const addAgent = () => {
         if (agentName.trim() !== "") {
             const newAgents = [...agents, agentName];
+            // const newAgents = [...agents, pagename];
+
             setAgents(newAgents);
+            
             setagentName("");
             setshowInput(false);
             submit(privates, newAgents);
@@ -180,7 +184,8 @@ function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,age
                                     <span className="sb-nav-label">New agent</span>
                                 </button>
                                 {showInput && (
-                                    <input className="sb-inline-input" type="text" placeholder="Agent name…" value={agentName} onChange={(e) => setagentName(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") addAgent(); }}/>
+                                    <input className="sb-inline-input" type="text" placeholder="Agent name…" value={agentName} onChange={(e) => setagentName(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") addAgent(); }}autoFocus/>
+                                    // <input className="sb-inline-input" type="text" placeholder="Agent name…" value={pagename} onChange={(e) => setPagename(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") addAgent(); autoFocus}}/>
                                 )}
                                 {agents.map((agent, index) => (
                                     <button key={index} className="sb-nav-item sb-page-item">
@@ -224,7 +229,14 @@ function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,age
                                 </button>
                                 {showPrivateInput && (
                                     <input className="sb-inline-input" type="text" placeholder="Page title…" value={privateName} onChange={(e) => setprivateName(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") addPrivate(); }} autoFocus/>
+                                    // <button className="sb-inline-input" type="text" placeholder="Page title…" value={privateName} onChange={(e) => setprivateName(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") addPrivate(); }} autoFocus/>
                                 )}
+                                {privates.map((privatee, index) => (
+                                    <button key={index} className="sb-nav-item sb-page-item">
+                                        <IoChatbubbleOutline className="sb-nav-icon" />
+                                        <span className="sb-nav-label">{privatee}</span>
+                                    </button>
+                                ))}
                                 {Pages.map((page,index) => (
                                     <div key={index} className="sb-page-row" onClick={()=>setShowPage(page.id)}>
                                         <button className="sb-nav-item sb-page-item sb-page-item--nested">
