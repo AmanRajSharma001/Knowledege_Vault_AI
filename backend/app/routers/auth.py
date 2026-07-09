@@ -69,7 +69,7 @@ def login(
     "token_type": "bearer"
 }
 @router.post("/page_data_title",response_model=PageResponse)
-def page_data_title(user:PageData,db: Session = Depends(get_db)):
+def page_data_title(user: PageData,db: Session = Depends(get_db)):
     new_data=Page(
         user_id=user.user_id,
         page_id=user.page_id,

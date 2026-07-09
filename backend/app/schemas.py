@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field,ConfigDict
+from typing import Optional
 
 
 class UserCreate(BaseModel):
@@ -28,7 +29,7 @@ class PageData(BaseModel):
     title:str
     page_type:str
     page_data:str
-    parent_page_id:int
+    parent_page_id: Optional[int] = None
 # ana bhi yhi chaiye jana bhi yi chahiye
 class PageResponse(BaseModel):
     user_id:int
@@ -36,4 +37,4 @@ class PageResponse(BaseModel):
     title:str
     page_type:str
     page_data:str
-    parent_page_id:int
+    parent_page_id: Optional[int] = None

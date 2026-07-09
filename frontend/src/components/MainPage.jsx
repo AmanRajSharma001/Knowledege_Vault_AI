@@ -25,11 +25,11 @@ function MainPage({Pages,showPage,PageTitle,setPageTitle}) {
     const [user_id,setUser_id]=useState(1)
     const [page_id,setPage_id]=useState(1)
     const [pagetype,setPagetype]=useState("private")
-    const [parent_page_id,setParentPageId]=useState(0)
+    const [parent_page_id,setParentPageId]=useState(null)
     const datastored=async()=>{
         // userid we will get from local storage
         try{
-            const result=await page_data_title({user_id,page_id,pagename,pagetype,dataEntered,parent_page_id}) 
+            const result=await page_data_title({user_id,page_id,title: pagename,page_type: pagetype,page_data: dataEntered,parent_page_id}) 
             console.log(result)
         }
         catch(error){
