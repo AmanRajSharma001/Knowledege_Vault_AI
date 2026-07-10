@@ -19,7 +19,7 @@ import { RxDoubleArrowLeft } from "react-icons/rx";
 // ====================================SIDEBAR RESIZE BAR=========================================
 
 function SideBar({Pages,setPages,showPage,setShowPage,
-    agents,setAgents,privates,setPrivates,submit,pagename,setPagename,setCurrentType,setfocusTitle,
+    agents,setAgents,privates,setPrivates,pagename,setPagename,setCurrentType,setfocusTitle,
     pages, activeId, onAdd, onSelect}) {
     const [filterPages,setFilterPages] = useState(Pages); //later work
     const [userName, setuserName] = useState("Virat");
@@ -77,7 +77,7 @@ function SideBar({Pages,setPages,showPage,setShowPage,
             setfocusTitle(true)
             setagentName("");
             setshowInput(false);
-            submit(privates, newAgents);
+            // submit(privates, newAgents);
         }
     };
     const [showArrow, setshowArrow] = useState(false);
@@ -95,7 +95,7 @@ function SideBar({Pages,setPages,showPage,setShowPage,
             setPrivates(newPrivates);
             setprivateName("");
             setshowPrivateInput(false);
-            submit(agents,newPrivates);
+            // submit(agents,newPrivates);
         }
     };
 
@@ -223,6 +223,7 @@ function SideBar({Pages,setPages,showPage,setShowPage,
                                     <span className="sb-nav-label">The Notion Basics</span>
                                 </button>
                                 <button className="sb-nav-item sb-add-item" onClick={() => setshowPrivateInput(!showPrivateInput)} >
+                                {/* <button className="sb-nav-item sb-add-item" onClick={() => {onAdd(); setshowPrivateInput(true)}} > */}
                                     <FaPlus className="sb-nav-icon sb-add-icon" />
                                     <span className="sb-nav-label">Add new</span>
                                 </button>
@@ -236,7 +237,7 @@ function SideBar({Pages,setPages,showPage,setShowPage,
                                         <span className="sb-nav-label">{privatee}</span>
                                     </button>
                                 ))}
-                                {Pages.map((page,index) => (
+                                {pages.map((page,index) => (
                                     <div key={index} className="sb-page-row" onClick={()=>setShowPage(page.id)}>
                                         <button className="sb-nav-item sb-page-item sb-page-item--nested">
                                             <IoIosArrowForward className="sb-nav-icon sb-chevron-icon" />

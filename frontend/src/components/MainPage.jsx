@@ -15,9 +15,9 @@ import { MdOutlineAddReaction, MdOutlineAddPhotoAlternate } from 'react-icons/md
 import { FaFileUpload } from 'react-icons/fa';
 import { page_data_title } from "../api/auth";
 
-function MainPage({Pages,showPage,currentType,pageTitle,setpageTitle,page_Data,setpageData,pagess,setpagess,focusTitle,setfocusTitle,
+function MainPage({pages,showPage,currentType,pageTitle,setpageTitle,page_Data,setpageData,focusTitle,setfocusTitle,
     page, onChange, titleInputRef, pagedataInputRef}) {
-    const showRealPage = Pages.find((x)=>x.id == showPage);
+    const showRealPage = pages.find((x)=>x.id == showPage);
     console.log(showRealPage)
     const [showHoverBar,setShowHoverBar]=useState(false)
     // ---------------------------------------------------
@@ -38,7 +38,7 @@ function MainPage({Pages,showPage,currentType,pageTitle,setpageTitle,page_Data,s
             title:pageTitle,
             data:page_Data
         }
-        setpagess([...pagess,newPage])
+        setpages([...pages,newPage])
     }
     // ---------------------------------------------------
     const [column,setColumn]=useState("Private")
