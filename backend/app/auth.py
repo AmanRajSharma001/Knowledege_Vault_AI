@@ -37,19 +37,20 @@ def create_access_token(data: dict):
     )
     return encoded_jwt
 def verify_access_token(token: str):
-
     try:
-        print("token is verified")
         payload = jwt.decode(
             token,
             SECRET_KEY,
             algorithms=[ALGORITHM]
         )
 
+        print("Token verified successfully")
+        print(payload)
+
         return payload
 
-    except JWTError:
-
+    except JWTError as e:
+        print("JWT Error:", e)
         raise HTTPException(
             status_code=401,
             detail="Invalid token"

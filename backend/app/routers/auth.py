@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import User,Page
+from app.dependencies import get_current_user
 from app.schemas import UserCreate, UserResponse,UserLogin, Token,PageData,PageResponse
 from app.auth import hash_password,verify_password, create_access_token
 router = APIRouter(
@@ -69,14 +70,15 @@ def login(
     "token_type": "bearer"
 }
 @router.post("/page_data_title",response_model=PageResponse)
-def page_data_title(user: PageData,db: Session = Depends(get_db)):
+# def page_data_title(user: PageData,db: Session = Depends(get_db)):
+def page_data_title(page: PageData,current_user: User = Depends(get_current_user),db: Session = Depends(get_db)):
     new_data=Page(
-        user_id=user.user_id,
-        page_id=user.page_id,
-        title=user.title,
-        page_type=user.page_type,
-        page_data=user.page_data,
-        parent_page_id=user.parent_page_id
+        user_id=current_user.user_id,
+        page_id=page.page_id,
+        title=page.title,
+        page_type=page.page_type,
+        page_data=page.page_data,
+        parent_page_id=page.parent_page_id
 
     )
     db.add(new_data)

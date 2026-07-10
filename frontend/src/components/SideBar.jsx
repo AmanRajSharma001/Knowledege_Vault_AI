@@ -18,8 +18,9 @@ import { RxDoubleArrowLeft } from "react-icons/rx";
 
 // ====================================SIDEBAR RESIZE BAR=========================================
 
-function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,
-    agents,setAgents,privates,setPrivates,submit,pagename,setPagename}) {
+function SideBar({Pages,setPages,showPage,setShowPage,
+    agents,setAgents,privates,setPrivates,submit,pagename,setPagename,setCurrentType,setfocusTitle,
+    pages, activeId, onAdd, onSelect}) {
     const [filterPages,setFilterPages] = useState(Pages); //later work
     const [userName, setuserName] = useState("Virat");
     const [width, setWidth] = useState(270);
@@ -69,9 +70,11 @@ function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,
         if (agentName.trim() !== "") {
             const newAgents = [...agents, agentName];
             // const newAgents = [...agents, pagename];
+            console.log("Agent clicked");
 
             setAgents(newAgents);
-            
+            setCurrentType("Agents")
+            setfocusTitle(true)
             setagentName("");
             setshowInput(false);
             submit(privates, newAgents);
@@ -86,23 +89,9 @@ function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,
     // =======================PRIVATE=====================================
     const addPrivate = () => {
         if (privateName.trim() !== "") {
-            // const data = [...Pages]
-            // setPages([
-            //     {
-            //         id: Date.now(),
-            //         title: privateName,
-            //         icon: "📘",
-            //         createdBy: "user_1",
-            //         createdAt: new Date().toISOString(),
-            //         updatedAt: new Date().toISOString(),
-            //         lastEditedBy: "Virat",
-            //         visibility: "private",
-            //         tags: ["Getting Started"],
-            //         aiEnabled: true,
-            //         children: []
-            //     },...data
-            // ])
             const newPrivates = [...privates, privateName];
+            setCurrentType("Privates")
+            setfocusTitle(true)
             setPrivates(newPrivates);
             setprivateName("");
             setshowPrivateInput(false);
@@ -172,25 +161,35 @@ function SideBar({Pages,setPages,showPage,setShowPage,PageTitle,setPageTitle,
                                 <button className="sb-icon-btn" onClick={(e) => { e.stopPropagation(); }} title="Options">
                                     <BsThreeDots />
                                 </button>
-                                <button className="sb-icon-btn" onClick={(e) => { e.stopPropagation(); setshowInput(!showInput); setshowAgent(true); }} title="New agent" >
+                                <button className="sb-icon-btn" onClick={(e) => { e.stopPropagation(); onAdd(); setshowAgent(true); }} title="New agent" >
                                     <FaPlus />
                                 </button>
                             </div>
                         </div>
                         {showAgent && (
                             <div className="sb-section-body">
-                                <button className="sb-nav-item sb-add-item" onClick={() => setshowInput(!showInput)} >
+                                <button className="sb-nav-item sb-add-item" onClick={() => { onAdd(); setshowAgent(true); }} >
                                     <FaPlus className="sb-nav-icon sb-add-icon" />
                                     <span className="sb-nav-label">New agent</span>
                                 </button>
                                 {showInput && (
-                                    <input className="sb-inline-input" type="text" placeholder="Agent name…" value={agentName} onChange={(e) => setagentName(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") addAgent(); }}autoFocus/>
+                                    <input className="sb-inline-input" type="text" placeholder="Agent name…" value={agentName} onChange={(e) => setagentName(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") addAgent(); }}/>
                                     // <input className="sb-inline-input" type="text" placeholder="Agent name…" value={pagename} onChange={(e) => setPagename(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") addAgent(); autoFocus}}/>
                                 )}
                                 {agents.map((agent, index) => (
                                     <button key={index} className="sb-nav-item sb-page-item">
                                         <IoChatbubbleOutline className="sb-nav-icon" />
                                         <span className="sb-nav-label">{agent}</span>
+                                    </button>
+                                ))}
+                                {(pages || []).map((p) => (
+                                    <button
+                                        key={p.id}
+                                        className={`sb-nav-item sb-page-item ${p.id === activeId ? "sb-nav-item--active" : ""}`}
+                                        onClick={() => onSelect(p.id)}
+                                    >
+                                        <IoChatbubbleOutline className="sb-nav-icon" />
+                                        <span className="sb-nav-label">{p.title || "newpage"}</span>
                                     </button>
                                 ))}
                             </div>

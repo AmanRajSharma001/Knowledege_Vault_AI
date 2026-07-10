@@ -24,7 +24,7 @@ class Token(BaseModel):
     token_type: str
 
 class PageData(BaseModel):
-    user_id:int
+    # user_id:int
     page_id:int
     title:str
     page_type:str
