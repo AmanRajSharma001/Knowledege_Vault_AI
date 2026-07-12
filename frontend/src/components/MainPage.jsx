@@ -15,6 +15,7 @@ import { MdOutlineAddReaction, MdOutlineAddPhotoAlternate } from 'react-icons/md
 import { FaFileUpload } from 'react-icons/fa';
 import { MdOutlineDeleteForever } from 'react-icons/md';
 import { page_data_title } from "../api/auth";
+import { IoMdCloudUpload } from 'react-icons/io';
 
 function MainPage({pages,showPage,currentType,pageTitle,setpageTitle,page_Data,setpageData,focusTitle,setfocusTitle,
     pagetype,setPagetype,
@@ -85,6 +86,37 @@ function MainPage({pages,showPage,currentType,pageTitle,setpageTitle,page_Data,s
         }
         console.log(file)
     }
+    // -------------------------upload pdf to supabase--------------------
+    const uploadPDF = async () => {
+    if (!file) {
+      alert("Please select a PDF first.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    setMessage("Uploading…");
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage(data.message || "Uploaded successfully");
+        setIsUploaded(true);
+        setUploadedFileName(file.name);
+      } else {
+        setMessage("Upload failed. Please try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage("Upload failed. Server may be offline.");
+    }
+  };
 
     return (
         <div className='mainpage'>
@@ -149,11 +181,11 @@ function MainPage({pages,showPage,currentType,pageTitle,setpageTitle,page_Data,s
                         <input type="file" ref={fileinputRef} accept="application/pdf" onChange={handllefilechange} style={{display:'none'}} ></input>
                             {pdfUrl&&(
                                 <>
-                                <button className="pdfTrash" onClick={closePdf}><MdOutlineDeleteForever/></button>
-
-                                <iframe className="pdfViewer"src={pdfUrl} width="100%" height="600px" title="PDF Viewer"> margin=0
-
-                                </iframe>
+                                <div className="pdfoptions1">
+                                    <button onClick={closePdf}><MdOutlineDeleteForever/></button>
+                                    <button onClick={uploadPDF}><IoMdCloudUpload/></button>
+                                </div>
+                                <iframe className="pdfViewer"src={pdfUrl} width="100%" height="600px" title="PDF Viewer"> margin=0</iframe>
                                 </>
                             )}
                     </div>   

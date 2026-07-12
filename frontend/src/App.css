@@ -1103,11 +1103,23 @@
   background-color: rgba(255,255,255,0.1);
   color:#e6e6e6;
 }
-.pdfTrash{
+.pdfoptions1{
   display: flex;
-  margin-left:auto;
+  flex-direction:row;
+  justify-content: flex-end;
   font-size:30px;
-  cursor:pointer
+  cursor:pointer;
+  gap:8px;
+}
+.pdfoptions1 button{
+  cursor:pointer;
+  border:1px solid rgba(255,255,255,0.05);
+  background-color: rgba(255,255,255,0.05);;
+  border-radius:15px;
+}
+.pdfoptions1 button:hover{
+  background-color: blue;
+  border-color:blue;
 }
 .pdfContainer{
     margin-top:30px;

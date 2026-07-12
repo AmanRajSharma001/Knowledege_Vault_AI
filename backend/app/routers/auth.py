@@ -1,5 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, UploadFile, File
+from app.pipeline import process_pdf
 from sqlalchemy.orm import Session
+
 
 from app.database import get_db
 from app.models import User,Page
@@ -85,3 +88,15 @@ def page_data_title(page: PageData,current_user: User = Depends(get_current_user
     db.commit()
     db.refresh(new_data)
     return new_data
+
+
+
+@router.post("/upload")
+async def upload_pdf(file: UploadFile = File(...)):
+    # 1. Read file into memory bytes
+    pdf_bytes = await file.read()
+    result=process_pdf(
+        pdf_bytes,
+        file.filename
+    )
+    return result
