@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { BsThreeDots } from "react-icons/bs";
 import { FiUpload } from 'react-icons/fi';
-import { LuMessageCirclePlus } from 'react-icons/lu';
+import { LuMessageCirclePlus, LuSparkles } from 'react-icons/lu';
 import { FaRegFaceKiss } from 'react-icons/fa6';
 import { IoIosArrowDown } from "react-icons/io";
 import { PiFileAudioFill } from 'react-icons/pi';
@@ -13,7 +13,7 @@ import { AiOutlineLink } from 'react-icons/ai';
 import { SlLock } from 'react-icons/sl';
 import { MdOutlineAddReaction, MdOutlineAddPhotoAlternate } from 'react-icons/md';
 
-function MainPage({Pages,showPage,PageTitle,setPageTitle}) {
+function MainPage({Pages,showPage,PageTitle,setPageTitle,showAI,setShowAI}) {
     const showRealPage = Pages.find((x)=>x.id == showPage);
     console.log(showRealPage)
     const [pagename,setPagename]=useState("")
@@ -69,6 +69,12 @@ function MainPage({Pages,showPage,PageTitle,setPageTitle}) {
                     </div>
                 </div>
             </div>
+
+            {!showAI && (
+                <button className="ai-launcher-btn" onClick={() => setShowAI(true)}>
+                    <LuSparkles />
+                </button>
+            )}
 
         </div>
     )

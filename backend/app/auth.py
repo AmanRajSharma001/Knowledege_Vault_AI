@@ -24,27 +24,20 @@ def verify_password(plain_password:str,hashed_password:str):
 def create_access_token(data: dict):
     print("token is created")
     to_encode = data.copy()
-    
-    # We compute the expiration timestamp. We use UTC to ensure consistent timing.
-    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    
-    # We append the 'exp' (expiration) claim to the JWT payload.
-    # JWT standard claims are 3-letter abbreviations: 'sub' (subject), 'exp' (expiration time), etc.
-    to_encode.update({"exp": expire})
-    
-    # jwt.encode cryptographically signs the payload with our SECRET_KEY using the specified ALGORITHM (HS256).
-    # The output is a string composed of three base64url-encoded parts separated by dots: HEADER.PAYLOAD.SIGNATURE.
+    expire = datetime.utcnow() + timedelta(
+        minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+    )
+    to_encode.update(
+        {"exp": expire}
+    )
     encoded_jwt = jwt.encode(
         to_encode,
         SECRET_KEY,
         algorithm=ALGORITHM
     )
     return encoded_jwt
+def verify_access_token(token: str):
 
-def verify_access_token(token: str) -> dict:
-    """
-    Decodes, validates, and verifies the signature of an incoming JWT.
-    """
     try:
         print("token is verified")
         payload = jwt.decode(
@@ -52,11 +45,22 @@ def verify_access_token(token: str) -> dict:
             SECRET_KEY,
             algorithms=[ALGORITHM]
         )
+
         return payload
+
     except JWTError:
-        # If verification fails (expired, invalid signature, malformed token), we raise an HTTPException.
-        # FastAPI's exception handler catches this and returns a 401 Unauthorized response to the client.
+
         raise HTTPException(
             status_code=401,
             detail="Invalid token"
         )
+
+# here will all these function will come
+# 
+# POST /signup
+
+# POST /login
+
+# POST /refresh
+
+# POST /logout

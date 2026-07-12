@@ -3,10 +3,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css'
 import SideBar from "./components/SideBar"
 import NavBar from "./components/NavBar"
-// import Trash from "./components/trash"
 import Login from "./pages/Login"
 import SignUp from "./pages/SignUp";
 import MainPage from './components/MainPage';
+import AiPanel from './components/AiPanel';
 function MainLayout() {
   const pageData = [
     {
@@ -67,16 +67,16 @@ function MainLayout() {
       setAgents(data[data.length-1].agents);
     }
   loadData();
-  },[]);      //the square bracket is here because it will let the rednder useEffect onece if i provided a nome inside the square bracket then the useEffect work when there is a change in the name
+  },[]);
   
   
   const [Pages,setPages] = useState(pageData);
+  const [showAI, setShowAI] = useState(false);
   return (
-    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden',backgroundColor: '#fff'}}>
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden',backgroundColor: '#191919'}}>
       <SideBar Pages = {Pages} setPages = { setPages } showPage = {showPage} setShowPage = {setShowPage} PageTitle = {PageTitle} setPageTitle = {setPageTitle} agents={agents} setAgents={setAgents} privates={privates} setPrivates={setPrivates} submit = {submit}/>
-      <MainPage Pages = {Pages} showPage = {showPage} PageTitle = {PageTitle} setPageTitle = {setPageTitle} />
-      {/* <main style={{ flex: 1, overflow: 'auto', backgroundColor: '#fff'}}>
-      </main> */}
+      <MainPage Pages = {Pages} showPage = {showPage} PageTitle = {PageTitle} setPageTitle = {setPageTitle} showAI={showAI} setShowAI={setShowAI} />
+      {showAI && <AiPanel onClose={() => setShowAI(false)} />}
     </div>
   );
 }
@@ -84,14 +84,14 @@ function MainLayout() {
 function App() {
   const [signupLogin, setSignupLogin] = useState("signup");
   return (
-    <MainLayout />
-    // <BrowserRouter>
-    //   <Routes>
-    //     <Route path="/" element={<Login />} />
-    //     <Route path="/SignUp" element={<SignUp />} />
-    //     <Route path="/sideBar" element={<MainLayout />} />
-    //   </Routes>
-    // </BrowserRouter>
+    // <MainLayout />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/SignUp" element={<SignUp />} />
+        <Route path="/sideBar" element={<MainLayout />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

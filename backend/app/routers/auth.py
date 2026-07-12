@@ -42,7 +42,7 @@ def signup(
     # - first(): Executes the SQL query and returns the first row or None.
     # FIX: Query corrected to filter on User.email_id (was User.email, which doesn't exist).
     existing_user = (
-        db.query(User).filter(User.email_id == user.email).first()
+        db.query(User).filter(User.email == user.email).first()
     )
 
     # If the email is already registered, we abort the request by raising a 400 Bad Request exception.
