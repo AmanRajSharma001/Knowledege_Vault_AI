@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Pydantic is a data validation and settings management library.
 # It enforces type hints at runtime, validates incoming payloads, and formats outgoing responses.
 # - BaseModel: The base class for defining structures and data contracts.
@@ -5,6 +6,11 @@
 # - Field: Used to add metadata and validation rules (like min_length, max_length, pattern matching) to schema fields.
 # - ConfigDict: A typing container used to configure Pydantic model behaviors.
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
+=======
+from pydantic import BaseModel, EmailStr, Field,ConfigDict
+from typing import Optional
+
+>>>>>>> upstream/main
 
 # UserCreate defines the schema for incoming user registration requests.
 # It enforces strict validation rules before our application processes the payload.
@@ -33,5 +39,25 @@ class UserResponse(BaseModel):
 class Token(BaseModel):
     # The JWT access token string
     access_token: str
+<<<<<<< HEAD
     # The authorization type. Standard for JWT authentication is 'bearer'.
     token_type: str
+=======
+    token_type: str
+
+class PageData(BaseModel):
+    # user_id:int
+    page_id:int
+    title:str
+    page_type:str
+    page_data:str
+    parent_page_id: Optional[int] = None
+# ana bhi yhi chaiye jana bhi yi chahiye
+class PageResponse(BaseModel):
+    user_id:int
+    page_id:int
+    title:str
+    page_type:str
+    page_data:str
+    parent_page_id: Optional[int] = None
+>>>>>>> upstream/main
