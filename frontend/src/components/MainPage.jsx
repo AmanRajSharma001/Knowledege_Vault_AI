@@ -16,16 +16,11 @@ import { FaFileUpload } from 'react-icons/fa';
 import { MdOutlineDeleteForever } from 'react-icons/md';
 import { page_data_title } from "../api/auth";
 import { IoMdCloudUpload } from 'react-icons/io';
+// import { uploadPDF as uploadPDFApi } from "../api/auth";
 
-<<<<<<< HEAD
-function MainPage({Pages,showPage,PageTitle,setPageTitle,showAI,setShowAI}) {
-    const showRealPage = Pages.find((x)=>x.id == showPage);
-=======
-function MainPage({pages,showPage,currentType,pageTitle,setpageTitle,page_Data,setpageData,focusTitle,setfocusTitle,
-    pagetype,setPagetype,
-    page, onChange, titleInputRef, pagedataInputRef}) {
+function MainPage({pages,showPage,currentType,pageTitle,showAI,setShowAI,setpageTitle,page_Data,setpageData,focusTitle,setfocusTitle,
+    pagetype,setPagetype,page, onChange, titleInputRef, pagedataInputRef}) {
     const showRealPage = pages.find((x)=>x.id == showPage);
->>>>>>> upstream/main
     console.log(showRealPage)
     const [showHoverBar,setShowHoverBar]=useState(false)
     // ---------------------------------------------------
@@ -53,7 +48,7 @@ function MainPage({pages,showPage,currentType,pageTitle,setpageTitle,page_Data,s
     const [pagename,setPagename]=useState("")
     const [dataEntered,setDataentered]=useState("")
     const [user_id,setUser_id]=useState(1)
-    const [page_id,setPage_id]=useState(3)
+    const [page_id,setPage_id]=useState(4)
     // const [pagetype,setPagetype]=useState("private")
     const [parent_page_id,setParentPageId]=useState(null)
     const secondInputRef=useRef(null)
@@ -84,44 +79,68 @@ function MainPage({pages,showPage,currentType,pageTitle,setpageTitle,page_Data,s
     const openFileExplorer=()=>{
         fileinputRef.current.click();
     };
-    const handllefilechange=(e)=>{
-        const file=e.target.files[0]
-        if(file){
-            setPdfUrl(URL.createObjectURL(file))
+    const handllefilechange = (event) => {
+        const selectedFile = event.target.files[0];
+
+        if (selectedFile) {
+            setFile(selectedFile);
+            setPdfUrl(URL.createObjectURL(selectedFile));
         }
-        console.log(file)
-    }
+    };
     // -------------------------upload pdf to supabase--------------------
+    const [message, setMessage] = useState("");
+    const [isUploaded, setIsUploaded] = useState(false);
+    const [uploadedFileName, setUploadedFileName] = useState("");
+    const [file, setFile] = useState(null);
     const uploadPDF = async () => {
-    if (!file) {
-      alert("Please select a PDF first.");
-      return;
-    }
+        if (!file) {
+            alert("Please select a PDF first.");
+            return;
+        }
 
-    const formData = new FormData();
-    formData.append("file", file);
-    setMessage("Uploading…");
+        setMessage("Uploading…");
 
-    try {
-      const response = await fetch("http://127.0.0.1:8000/upload", {
-        method: "POST",
-        body: formData,
-      });
+        try {
+            const data = await uploadPDF(file);
 
-      const data = await response.json();
+            setMessage(data.message || "Uploaded successfully");
+            setIsUploaded(true);
+            setUploadedFileName(file.name);
+        } catch (err) {
+            console.error(err);
+            setMessage("Upload failed. Please try again.");
+        }
+    };
+//     const uploadPDF = async () => {
+//     if (!file) {
+//       alert("Please select a PDF first.");
+//       return;
+//     }
 
-      if (response.ok) {
-        setMessage(data.message || "Uploaded successfully");
-        setIsUploaded(true);
-        setUploadedFileName(file.name);
-      } else {
-        setMessage("Upload failed. Please try again.");
-      }
-    } catch (err) {
-      console.error(err);
-      setMessage("Upload failed. Server may be offline.");
-    }
-  };
+//     const formData = new FormData();
+//     formData.append("file", file);
+//     setMessage("Uploading…");
+
+//     try {
+//       const response = await fetch("http://127.0.0.1:8000/upload", {
+//         method: "POST",
+//         body: formData,
+//       });
+
+//       const data = await response.json();
+
+//       if (response.ok) {
+//         setMessage(data.message || "Uploaded successfully");
+//         setIsUploaded(true);
+//         setUploadedFileName(file.name);
+//       } else {
+//         setMessage("Upload failed. Please try again.");
+//       }
+//     } catch (err) {
+//       console.error(err);
+//       setMessage("Upload failed. Server may be offline.");
+//     }
+//   };
 
     return (
         <div className='mainpage'>
@@ -214,7 +233,7 @@ function MainPage({pages,showPage,currentType,pageTitle,setpageTitle,page_Data,s
             </div>
 
             {!showAI && (
-                <button className="ai-launcher-btn" onClick={() => setShowAI(true)}>
+                <button className="aiLauncher" onClick={() => setShowAI(true)}>
                     <LuSparkles />
                 </button>
             )}

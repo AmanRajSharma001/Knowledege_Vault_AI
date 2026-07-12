@@ -40,11 +40,6 @@ class Agent(base):
 
 class Page(base):
     __tablename__ = "PageData"
-<<<<<<< HEAD
-
-    page_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-=======
->>>>>>> upstream/main
     user_id: Mapped[int] = mapped_column(ForeignKey("users.user_id"),nullable=False)
     page_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     title: Mapped[str] = mapped_column(default="New Page")
