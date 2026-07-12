@@ -41,58 +41,21 @@ with engine.connect() as conn:
 
 class base(DeclarativeBase):
     pass
-# base.metadata.create_all(engine)
 
-Sessionlocal=sessionmaker(bind=engine,autoflush=False,autocommit=False)
+# sessionmaker binds the engine to a session class factory. 
+# - autoflush=False: Prevents SQLAlchemy from auto-sending queries to the database before we explicitly commit or flush, saving network trips.
+# - autocommit=False: Disables auto-commit mode to ensure we explicitly control database transactions via 'db.commit()'.
+SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
+# This function acts as a database session lifecycle generator.
+# We inject this function into our FastAPI route handlers using Depends(get_db).
+# - It opens a clean database session (db = SessionLocal()) when a request arrives.
+# - 'yield db' passes control back to the endpoint so the route can execute its query.
+# - The 'finally:' block runs AFTER the request completes, guaranteeing the database connection is closed safely (db.close()),
+#   preventing database connection leaks in production.
 def get_db():
-    db = Sessionlocal()
+    db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
-        
-# class Login(base):
-#     __tablename__="LoginData"
-#     user_id:Mapped[int]=mapped_column(primary_key=True,autoincrement=True)
-#     user_name:Mapped[str]=mapped_column(nullable=True)
-#     passwd:Mapped[str]=mapped_column(nullable=True)
-#     email_id:Mapped[str]=mapped_column(nullable=True)
-# class Private(base):
-#     __tablename__="PrivateData"
-#     user_id:Mapped[int]=mapped_column(ForeignKey("LoginData.user_id"))
-#     workspace_id:Mapped[int]=mapped_column(default=1)
-#     private_id:Mapped[int]=mapped_column(primary_key=True,autoincrement=True)
-#     private_title:Mapped[str]=mapped_column(default="New Page")
-#     parent_page_id:Mapped[int|None]=mapped_column(ForeignKey("PrivateData.private_id"),nullable=True)
-#     date_time:Mapped[DateTime]=mapped_column(default=DateTime.utcnow)
-# class Agent(base):
-#     __tablename__="AgentData"
-#     user_id:Mapped[int]=mapped_column(ForeignKey("LoginData.user_id"))
-#     workspace_id:Mapped[int]=mapped_column(default=1)
-#     agent_id:Mapped[int]=mapped_column(primary_key=True,autoincrement=True)
-#     agent_title:Mapped[str]=mapped_column(default="New Page")
-#     parent_page_id:Mapped[int|None]=mapped_column(ForeignKey("PrivateData.private_id"),nullable=True)
-#     date_time:Mapped[DateTime]=mapped_column(default=DateTime.utcnow)
-
-# #this is the pruposed one solution by gpt that we should create 1 table and differentiate them by page type
-
-# class Page(base):
-#     __tablename__ = "PageData"
-#     page_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-#     user_id: Mapped[int] = mapped_column(ForeignKey("LoginData.user_id"),nullable=False)
-#     workspace_id: Mapped[int] = mapped_column(default=1)
-#     title: Mapped[str] = mapped_column(default="New Page")
-#     # "private" or "agent"
-#     page_type: Mapped[str] = mapped_column(nullable=False)
-#     # NULL = top-level page
-#     parent_page_id: Mapped[int | None] = mapped_column(ForeignKey("PageData.page_id"),nullable=True)
-#     created_at: Mapped[DateTime] = mapped_column(DateTime,default=DateTime.utcnow)
-
-# # this below table will be deleted and a fresh databasename will be created 
-# class Users(base):
-#     __tablename__="UserData"
-#     name:Mapped[str]=mapped_column(primary_key=True)
-#     privates:Mapped[list[str]]=mapped_column(ARRAY(String), nullable=True)
-#     agents:Mapped[list[str]]=mapped_column(ARRAY(String), nullable=True)
-# # table created with columns

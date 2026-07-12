@@ -1,4 +1,10 @@
+# FastAPI is the core web framework class used to build our API.
+# Depends: The dependency injection helper.
 from fastapi import FastAPI, Depends
+
+# CORSMiddleware is a security middleware that manages Cross-Origin Resource Sharing (CORS).
+# Since our React frontend runs on 'http://localhost:5173' and our FastAPI backend runs on 'http://localhost:8000',
+# browsers block requests unless CORS is explicitly configured. We allow our React port to make requests.
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import engine

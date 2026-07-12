@@ -3,9 +3,17 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css'
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import SideBar from "./components/SideBar"
+<<<<<<< HEAD
+import NavBar from "./components/NavBar"
+import Login from "./pages/Login"
+import SignUp from "./pages/SignUp";
+import MainPage from './components/MainPage';
+import AiPanel from './components/AiPanel';
+=======
 import MainPage from './components/MainPage';
 // import Trash from "./components/trash"
 
+>>>>>>> upstream/main
 function MainLayout() {
   // const [currentType,setCurrentType]=useState("Private")
   const [showPage,setShowPage] = useState(null);
@@ -25,6 +33,19 @@ function MainLayout() {
     if (activeId != null) {
       titleInputRef.current?.focus();
     }
+<<<<<<< HEAD
+  loadData();
+  },[]);
+  
+  
+  const [Pages,setPages] = useState(pageData);
+  const [showAI, setShowAI] = useState(false);
+  return (
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden',backgroundColor: '#191919'}}>
+      <SideBar Pages = {Pages} setPages = { setPages } showPage = {showPage} setShowPage = {setShowPage} PageTitle = {PageTitle} setPageTitle = {setPageTitle} agents={agents} setAgents={setAgents} privates={privates} setPrivates={setPrivates} submit = {submit}/>
+      <MainPage Pages = {Pages} showPage = {showPage} PageTitle = {PageTitle} setPageTitle = {setPageTitle} showAI={showAI} setShowAI={setShowAI} />
+      {showAI && <AiPanel onClose={() => setShowAI(false)} />}
+=======
   }, [activeId]);
 
   const addPage = useCallback(() => {
@@ -47,6 +68,7 @@ function MainLayout() {
       />
       <MainPage pages = {pages} showPage = {showPage} pagetype={pagetype} setPagetype={setPagetype}
       page={activePage} onChange={updatePage} titleInputRef={titleInputRef} pagedataInputRef={pagedataInputRef}/>
+>>>>>>> upstream/main
     </div>
   );
 }
@@ -54,14 +76,14 @@ function MainLayout() {
 function App() {
   const [signupLogin, setSignupLogin] = useState("signup");
   return (
-    <MainLayout />
-    // <BrowserRouter>
-    //   <Routes>
-    //     <Route path="/" element={<Login />} />
-    //     <Route path="/SignUp" element={<SignUp />} />
-    //     <Route path="/sideBar" element={<MainLayout />} />
-    //   </Routes>
-    // </BrowserRouter>
+    // <MainLayout />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/SignUp" element={<SignUp />} />
+        <Route path="/sideBar" element={<MainLayout />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

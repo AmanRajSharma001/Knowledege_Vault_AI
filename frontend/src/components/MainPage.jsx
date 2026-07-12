@@ -1,7 +1,7 @@
 import React, { useState,useRef,useEffect } from 'react'
 import { BsThreeDots } from "react-icons/bs";
 import { FiUpload } from 'react-icons/fi';
-import { LuMessageCirclePlus } from 'react-icons/lu';
+import { LuMessageCirclePlus, LuSparkles } from 'react-icons/lu';
 import { FaRegFaceKiss } from 'react-icons/fa6';
 import { IoIosArrowDown } from "react-icons/io";
 import { PiFileAudioFill } from 'react-icons/pi';
@@ -17,10 +17,15 @@ import { MdOutlineDeleteForever } from 'react-icons/md';
 import { page_data_title } from "../api/auth";
 import { IoMdCloudUpload } from 'react-icons/io';
 
+<<<<<<< HEAD
+function MainPage({Pages,showPage,PageTitle,setPageTitle,showAI,setShowAI}) {
+    const showRealPage = Pages.find((x)=>x.id == showPage);
+=======
 function MainPage({pages,showPage,currentType,pageTitle,setpageTitle,page_Data,setpageData,focusTitle,setfocusTitle,
     pagetype,setPagetype,
     page, onChange, titleInputRef, pagedataInputRef}) {
     const showRealPage = pages.find((x)=>x.id == showPage);
+>>>>>>> upstream/main
     console.log(showRealPage)
     const [showHoverBar,setShowHoverBar]=useState(false)
     // ---------------------------------------------------
@@ -207,6 +212,12 @@ function MainPage({pages,showPage,currentType,pageTitle,setpageTitle,page_Data,s
                     </div>
                 </div>
             </div>
+
+            {!showAI && (
+                <button className="ai-launcher-btn" onClick={() => setShowAI(true)}>
+                    <LuSparkles />
+                </button>
+            )}
 
         </div>
     )

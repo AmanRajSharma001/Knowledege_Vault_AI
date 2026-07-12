@@ -1,5 +1,9 @@
-from sqlalchemy import create_engine,text,ARRAY,String
-from sqlalchemy.orm import DeclarativeBase,Mapped,mapped_column,Session,sessionmaker
+# datetime is Python's built-in module for working with date and time values.
+from datetime import datetime
+# We import the classes needed to define our schema relationships and column types.
+# - Mapped: A generic type hint indicating that the attribute is managed by SQLAlchemy.
+# - mapped_column: The SQLAlchemy 2.0 helper used to define database column constraints and types.
+from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import ForeignKey, String
 from app.database import base
 from datetime import datetime
@@ -36,6 +40,11 @@ class Agent(base):
 
 class Page(base):
     __tablename__ = "PageData"
+<<<<<<< HEAD
+
+    page_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+=======
+>>>>>>> upstream/main
     user_id: Mapped[int] = mapped_column(ForeignKey("users.user_id"),nullable=False)
     page_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     title: Mapped[str] = mapped_column(default="New Page")
