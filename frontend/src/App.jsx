@@ -7,9 +7,11 @@ import MainPage from './components/MainPage';
 // import Trash from "./components/trash"
 
 function MainLayout() {
+  // const [currentType,setCurrentType]=useState("Private")
   const [showPage,setShowPage] = useState(null);
   const [privates, setPrivates] = useState([]);
   const [agents, setAgents] = useState([]); 
+  const [pagetype,setPagetype]=useState("Private")
   const [name, setName] = useState("Virat");
   
   // -----------------------merging sidebar aggent and private with mainpage title------------------------
@@ -39,10 +41,11 @@ function MainLayout() {
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden',backgroundColor: '#fff'}}>
       <SideBar  setpages = { setpages } showPage = {showPage} setShowPage = {setShowPage}
+       pagetype={pagetype} setPagetype={setPagetype}
        agents={agents} setAgents={setAgents} privates={privates} setPrivates={setPrivates} 
       pages={pages} activeId={activeId} onAdd={addPage} onSelect={setActiveId}
       />
-      <MainPage pages = {pages} showPage = {showPage} 
+      <MainPage pages = {pages} showPage = {showPage} pagetype={pagetype} setPagetype={setPagetype}
       page={activePage} onChange={updatePage} titleInputRef={titleInputRef} pagedataInputRef={pagedataInputRef}/>
     </div>
   );

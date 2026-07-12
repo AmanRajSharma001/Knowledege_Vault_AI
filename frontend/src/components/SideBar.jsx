@@ -19,7 +19,7 @@ import { RxDoubleArrowLeft } from "react-icons/rx";
 // ====================================SIDEBAR RESIZE BAR=========================================
 
 function SideBar({Pages,setPages,showPage,setShowPage,
-    agents,setAgents,privates,setPrivates,pagename,setPagename,setCurrentType,setfocusTitle,
+    agents,setAgents,privates,setPrivates,pagename,setPagename,setPagetype,setfocusTitle,
     pages, activeId, onAdd, onSelect}) {
     const [filterPages,setFilterPages] = useState(Pages); //later work
     const [userName, setuserName] = useState("Virat");
@@ -64,7 +64,7 @@ function SideBar({Pages,setPages,showPage,setShowPage,
     const [showoptions, setShowOptions] = useState("Home");
 
     const [showAgent, setshowAgent] = useState(false);
-    const [showInput, setshowInput] = useState(false);
+    // const [showInput, setshowInput] = useState(false);
     const [agentName, setagentName] = useState("");
     const addAgent = () => {
         if (agentName.trim() !== "") {
@@ -73,10 +73,10 @@ function SideBar({Pages,setPages,showPage,setShowPage,
             console.log("Agent clicked");
 
             setAgents(newAgents);
-            setCurrentType("Agents")
+            setPagetype("Agents")
             setfocusTitle(true)
             setagentName("");
-            setshowInput(false);
+            // setshowInput(false);
             // submit(privates, newAgents);
         }
     };
@@ -90,7 +90,7 @@ function SideBar({Pages,setPages,showPage,setShowPage,
     const addPrivate = () => {
         if (privateName.trim() !== "") {
             const newPrivates = [...privates, privateName];
-            setCurrentType("Privates")
+            // setPagetype("Privates")
             setfocusTitle(true)
             setPrivates(newPrivates);
             setprivateName("");
@@ -152,7 +152,7 @@ function SideBar({Pages,setPages,showPage,setShowPage,
                 <div className="sb-middle">
                     {/* =======================================AGENTS===================================================== */}
                     <div className="sb-section">
-                        <div className={`sb-section-header${showAgent ? " sb-section-header--open" : ""}`} onClick={() => setshowAgent(!showAgent)}>
+                        <div className={`sb-section-header${showAgent ? " sb-section-header--open" : ""}`} onClick={() => setshowAgent(!showAgent)} >
                             <button className="sb-section-arrow">
                                 {showAgent ? <IoIosArrowDown className="sb-arrow-icon" /> : <IoIosArrowForward className="sb-arrow-icon" />}
                             </button>
@@ -161,21 +161,21 @@ function SideBar({Pages,setPages,showPage,setShowPage,
                                 <button className="sb-icon-btn" onClick={(e) => { e.stopPropagation(); }} title="Options">
                                     <BsThreeDots />
                                 </button>
-                                <button className="sb-icon-btn" onClick={(e) => { e.stopPropagation(); onAdd(); setshowAgent(true); }} title="New agent" >
+                                {/* <button className="sb-icon-btn" onClick={(e) => { e.stopPropagation(); onAdd(); setshowAgent(true); }} title="New agent" >
                                     <FaPlus />
-                                </button>
+                                </button> */}
                             </div>
                         </div>
                         {showAgent && (
                             <div className="sb-section-body">
                                 <button className="sb-nav-item sb-add-item" onClick={() => { onAdd(); setshowAgent(true); }} >
                                     <FaPlus className="sb-nav-icon sb-add-icon" />
-                                    <span className="sb-nav-label">New agent</span>
+                                    <span className="sb-nav-label"onClick={()=>setPagetype("Agent")}>New agent</span>
                                 </button>
-                                {showInput && (
-                                    <input className="sb-inline-input" type="text" placeholder="Agent name…" value={agentName} onChange={(e) => setagentName(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") addAgent(); }}/>
+                                {/* {showInput && (
+                                    <input className="sb-inline-input" type="text" placeholder="Agent name…" value={agentName} onChange={(e) => setagentName(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") ;addAgent(); }}/>
                                     // <input className="sb-inline-input" type="text" placeholder="Agent name…" value={pagename} onChange={(e) => setPagename(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") addAgent(); autoFocus}}/>
-                                )}
+                                )} */}
                                 {agents.map((agent, index) => (
                                     <button key={index} className="sb-nav-item sb-page-item">
                                         <IoChatbubbleOutline className="sb-nav-icon" />
@@ -189,7 +189,7 @@ function SideBar({Pages,setPages,showPage,setShowPage,
                                         onClick={() => onSelect(p.id)}
                                     >
                                         <IoChatbubbleOutline className="sb-nav-icon" />
-                                        <span className="sb-nav-label">{p.title || "newpage"}</span>
+                                        <span className="sb-nav-label">{p.title || "New page"}</span>
                                     </button>
                                 ))}
                             </div>

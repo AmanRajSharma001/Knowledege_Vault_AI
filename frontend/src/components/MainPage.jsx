@@ -13,9 +13,11 @@ import { AiOutlineLink } from 'react-icons/ai';
 import { SlLock } from 'react-icons/sl';
 import { MdOutlineAddReaction, MdOutlineAddPhotoAlternate } from 'react-icons/md';
 import { FaFileUpload } from 'react-icons/fa';
+import { MdOutlineDeleteForever } from 'react-icons/md';
 import { page_data_title } from "../api/auth";
 
 function MainPage({pages,showPage,currentType,pageTitle,setpageTitle,page_Data,setpageData,focusTitle,setfocusTitle,
+    pagetype,setPagetype,
     page, onChange, titleInputRef, pagedataInputRef}) {
     const showRealPage = pages.find((x)=>x.id == showPage);
     console.log(showRealPage)
@@ -41,12 +43,12 @@ function MainPage({pages,showPage,currentType,pageTitle,setpageTitle,page_Data,s
         setpages([...pages,newPage])
     }
     // ---------------------------------------------------
-    const [column,setColumn]=useState("Private")
+    
     const [pagename,setPagename]=useState("")
     const [dataEntered,setDataentered]=useState("")
     const [user_id,setUser_id]=useState(1)
     const [page_id,setPage_id]=useState(3)
-    const [pagetype,setPagetype]=useState("private")
+    // const [pagetype,setPagetype]=useState("private")
     const [parent_page_id,setParentPageId]=useState(null)
     const secondInputRef=useRef(null)
     const datastored=async()=>{
@@ -67,13 +69,29 @@ function MainPage({pages,showPage,currentType,pageTitle,setpageTitle,page_Data,s
             }
         }
     }
+    // --------------------------file upload section------------------
+    const fileinputRef=useRef(null)
+    const [pdfUrl, setPdfUrl] = useState(null);
+    const closePdf = () => {
+        setPdfUrl(null);
+    };
+    const openFileExplorer=()=>{
+        fileinputRef.current.click();
+    };
+    const handllefilechange=(e)=>{
+        const file=e.target.files[0]
+        if(file){
+            setPdfUrl(URL.createObjectURL(file))
+        }
+        console.log(file)
+    }
 
     return (
         <div className='mainpage'>
             <div className='main-header'>
                 <div className='top-left-btn'>
                     <button className='pagename'><FaRegFaceKiss/><p>{(page ? page.title : pagename) ||  "New Page"}</p></button><p>/</p>
-                    <button>{column}</button>
+                    <button>{pagetype}</button>
                     <button><IoIosArrowDown/></button>
                 </div>
                 <div className='top-right-btn'>
@@ -99,17 +117,7 @@ function MainPage({pages,showPage,currentType,pageTitle,setpageTitle,page_Data,s
                 </div>
 
                 <div className='main-middle'>
-                    {/* <input className='page-title-input'  type="text" placeholder="New Page" value={pagename} onChange={(e)=>setPagename(e.target.value)} onKeyDown={(e)=>{
-                        if (e.key==="Enter"){
-                            secondInputRef.current.focus();
-                        }
-                    }}/> */}
-                    <input
-                        className='page-title-input'
-                        ref={titleInputRef || titleRef}
-                        type="text"
-                        placeholder="New Page"
-                        value={page ? page.title : pageTitle}
+                    <input className='page-title-input' ref={titleInputRef || titleRef} type="text" placeholder="New Page" value={page ? page.title : pageTitle}
                         onChange={(e) => {
                             if (page) {
                                 onChange(page.id, "title", e.target.value);
@@ -119,21 +127,15 @@ function MainPage({pages,showPage,currentType,pageTitle,setpageTitle,page_Data,s
                             }
                         }}
                         onKeyDown={(e) => {
-                            // Focus Chaining: When pressing Enter in the title input,
-                            // immediately transfer focus to the pagedata input.
+
                             if (e.key === "Enter") {
                                 const nextRef = pagedataInputRef || dataRef;
                                 nextRef.current?.focus();
                             }
                         }}
                     />
-                    {/* <input className='page-content-input' ref={secondInputRef} type="text" placeholder="Press 'space' for AI or '/' for commands" value={dataEntered} onChange={(e)=>setDataentered(e.target.value)}/> */}
-                    <input
-                        className='page-content-input'
-                        ref={pagedataInputRef || dataRef}
-                        type="text"
-                        placeholder="Press 'space' for AI or '/' for commands"
-                        value={page ? page.pagedata : dataEntered}
+                    <input className='page-content-input' ref={pagedataInputRef || dataRef} type="text" placeholder="Press 'space' for AI or '/' for commands"
+                    value={page ? page.pagedata : dataEntered}
                         onChange={(e) => {
                             if (page) {
                                 onChange(page.id, "pagedata", e.target.value);
@@ -143,6 +145,18 @@ function MainPage({pages,showPage,currentType,pageTitle,setpageTitle,page_Data,s
                             }
                         }}
                     />
+                    <div className="pdfContainer">
+                        <input type="file" ref={fileinputRef} accept="application/pdf" onChange={handllefilechange} style={{display:'none'}} ></input>
+                            {pdfUrl&&(
+                                <>
+                                <button className="pdfTrash" onClick={closePdf}><MdOutlineDeleteForever/></button>
+
+                                <iframe className="pdfViewer"src={pdfUrl} width="100%" height="600px" title="PDF Viewer"> margin=0
+
+                                </iframe>
+                                </>
+                            )}
+                    </div>   
                 </div>
             </div>
             
@@ -151,7 +165,9 @@ function MainPage({pages,showPage,currentType,pageTitle,setpageTitle,page_Data,s
                     Get started with
                     <div className='bottom-options'>
                         <button><FaRegFaceKiss/>Ask AI</button>
-                        <button><PiFileAudioFill/>AI Meeting Notes </button>
+                        {/* <button><PiFileAudioFill/>AI Meeting Notes </button> */}
+                        <button onClick={openFileExplorer}><PiFileAudioFill/>Upload PDF </button>
+                        
                         <button><FaTableCells/>Database</button>
                         <button><LuNotepadText/>Form</button>
                         <button><TbTriangleSquareCircleFilled/>Templates</button>

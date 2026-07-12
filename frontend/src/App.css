@@ -1103,6 +1103,26 @@
   background-color: rgba(255,255,255,0.1);
   color:#e6e6e6;
 }
+.pdfTrash{
+  display: flex;
+  margin-left:auto;
+  font-size:30px;
+  cursor:pointer
+}
+.pdfContainer{
+    margin-top:30px;
+    background:#1f1f1f;
+    border:1px solid #343434;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 10px 20px rgba(255, 255, 255, 0.35);
+}
+.pdfViewer{
+    width:100%;
+    height:700px;
+    border:none;
+    
+}
 /* .mainpage{
   background-color: #696666;
   min-width: 100%;
