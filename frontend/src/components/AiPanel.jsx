@@ -29,47 +29,47 @@ function AiPanel({ onClose }) {
     };
 
     return (
-        <div className={`ai-panel ${animate ? 'open' : ''}`}>
-            <div className="ai-header">
+        <div className={`aiPanel ${animate ? 'open' : ''}`}>
+            <div className="aiTop">
                 <h3>New AI chat</h3>
-                <button className="ai-close-btn" onClick={handleClose}>
+                <button className="aiClose" onClick={handleClose}>
                     <RxDoubleArrowRight />
                 </button>
             </div>
             
-            <div className="ai-content">
-                <div className="ai-empty-state">
-                    <div className="ai-sparkle-container">
-                        <LuSparkles className="ai-sparkle-icon" />
+            <div className="aiMain">
+                <div className="aiEmpty">
+                    <div className="aiSparkle">
+                        <LuSparkles className="aiIcon" />
                     </div>
-                    <h2 className="ai-empty-title">How can I help you today?</h2>
+                    <h2 className="aiTitle">How can I help you today?</h2>
                     
-                    <div className="ai-actions-list">
-                        <button className="ai-action-item">
-                            <PiNotepad className="ai-action-icon" />
+                    <div className="aiOptions">
+                        <button className="aiOption">
+                            <PiNotepad className="aiIcon" />
                             <span>Summarize this page</span>
                         </button>
-                        <button className="ai-action-item">
-                            <LuPresentation className="ai-action-icon" />
+                        <button className="aiOption">
+                            <LuPresentation className="aiIcon" />
                             <span>Create a slide deck</span>
                         </button>
-                        <button className="ai-action-item">
-                            <LuLanguages className="ai-action-icon" />
+                        <button className="aiOption">
+                            <LuLanguages className="aiIcon" />
                             <span>Translate this page</span>
                         </button>
-                        <button className="ai-action-item">
-                            <LuChartLine className="ai-action-icon" />
+                        <button className="aiOption">
+                            <LuChartLine className="aiIcon" />
                             <span>Analyze for insights</span>
                         </button>
                     </div>
                 </div>
             </div>
 
-            <div className="ai-footer">
+            <div className="aiBottom">
                 <form onSubmit={handleSend}>
-                    <div className="ai-input-wrapper">
+                    <div className="aiInput">
                         <textarea 
-                            className="ai-textarea" 
+                            className="aiTextarea" 
                             placeholder="Do anything with AI..." 
                             value={inputValue} 
                             onChange={(e) => setInputValue(e.target.value)}
@@ -80,9 +80,9 @@ function AiPanel({ onClose }) {
                                 }
                             }}
                         />
-                        <div className="ai-input-controls">
-                            <span className="ai-input-model">Knowledge Assistant</span>
-                            <button type="submit" className="ai-send-btn" disabled={!inputValue.trim()}>
+                        <div className="aiControls">
+                            <span className="aiModel">Knowledge Assistant</span>
+                            <button type="submit" className="aiSend" disabled={!inputValue.trim()}>
                                 <BsSend />
                             </button>
                         </div>

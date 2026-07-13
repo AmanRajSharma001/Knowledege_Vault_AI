@@ -3,22 +3,6 @@
 # Depends: The FastAPI dependency injection utility.
 # HTTPException: The standard exception to return custom error payloads to the client.
 from fastapi import APIRouter, Depends, HTTPException
-<<<<<<< HEAD
-
-# Session represents a transactional workspace where database entities are tracked and queried.
-from sqlalchemy.orm import Session
-
-# We import our database session helper, the database model, the Pydantic schemas, 
-# and the utility functions for password hashing and token generation.
-from app.database import get_db
-from app.models import User
-from app.schemas import UserCreate, UserResponse, UserLogin, Token
-from app.auth import hash_password, verify_password, create_access_token
-
-# Initialize the router instance for authentication paths.
-# - prefix="/auth": Prepends '/auth' to all endpoints defined here (e.g. '/auth/signup', '/auth/login').
-# - tags: Categorizes these endpoints in OpenAPI docs.
-=======
 from fastapi import APIRouter, UploadFile, File
 from app.pipeline import process_pdf
 from sqlalchemy.orm import Session
@@ -29,7 +13,6 @@ from app.models import User,Page
 from app.dependencies import get_current_user
 from app.schemas import UserCreate, UserResponse,UserLogin, Token,PageData,PageResponse
 from app.auth import hash_password,verify_password, create_access_token
->>>>>>> upstream/main
 router = APIRouter(
     prefix="/auth",
     tags=["Authentication"]
@@ -129,15 +112,6 @@ def login(
     
     # We return the JSON dictionary. FastAPI serializes this to match the Token response schema.
     return {
-<<<<<<< HEAD
-        "access_token": access_token,
-        "token_type": "bearer"
-    }
-
-# Secure Hash Algorithm
-# Hash-based Message Authentication Code
-# You simply choose the algorithm (HS256) and provide your SECRET_KEY; the JWT library handles the cryptography for you.
-=======
     "access_token": access_token,
     "token_type": "bearer"
 }
@@ -169,4 +143,3 @@ async def upload_pdf(file: UploadFile = File(...)):
         file.filename
     )
     return result
->>>>>>> upstream/main
