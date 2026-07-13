@@ -8,6 +8,7 @@ import { LuLibraryBig, LuSparkles, LuLanguages, LuPresentation, LuChartLine } fr
 function AiPanel({ onClose }) {
     const [animate, setAnimate] = useState(false);
     const [inputValue, setInputValue] = useState("");
+    const [chats,setchats]=useState([])
 
     useEffect(() => {
         const timer = setTimeout(() => {

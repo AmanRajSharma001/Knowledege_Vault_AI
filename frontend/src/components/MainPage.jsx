@@ -16,7 +16,7 @@ import { FaFileUpload } from 'react-icons/fa';
 import { MdOutlineDeleteForever } from 'react-icons/md';
 import { page_data_title } from "../api/auth";
 import { IoMdCloudUpload } from 'react-icons/io';
-// import { uploadPDF as uploadPDFApi } from "../api/auth";
+import { uploadPDF } from "../api/auth";
 
 function MainPage({pages,showPage,currentType,pageTitle,showAI,setShowAI,setpageTitle,page_Data,setpageData,focusTitle,setfocusTitle,
     pagetype,setPagetype,page, onChange, titleInputRef, pagedataInputRef}) {
@@ -92,55 +92,63 @@ function MainPage({pages,showPage,currentType,pageTitle,showAI,setShowAI,setpage
     const [isUploaded, setIsUploaded] = useState(false);
     const [uploadedFileName, setUploadedFileName] = useState("");
     const [file, setFile] = useState(null);
-    const uploadPDF = async () => {
-        if (!file) {
-            alert("Please select a PDF first.");
-            return;
+    // const uploadPDF = async () => {
+    //     if (!file) {
+    //         alert("Please select a PDF first.");
+    //         return;
+    //     }
+
+    //     setMessage("Uploading…");
+
+    //     try {
+    //         const data = await uploadPDF(file);
+
+    //         setMessage(data.message || "Uploaded successfully");
+    //         setIsUploaded(true);
+    //         setUploadedFileName(file.name);
+    //     } catch (err) {
+    //         console.error(err);
+    //         setMessage("Upload failed. Please try again.");
+    //     }
+    // };
+    const handleUploadPDF = async () => {
+    if (!file) {
+      alert("Please select a PDF first.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    setMessage("Uploading…");
+
+    try{
+        const data = await uploadPDF(file)
+
+        
+        setMessage(data.message || "Uploaded successfully");
+        setIsUploaded(true);
+        setUploadedFileName(file.name);
+    
+    }
+    catch(error){
+            console.log("Full error:", error);
+            console.log("Response:", error.response);
+            console.log("Status:", error.response?.status);
+            console.log("Data:", error.response?.data);
+            if (error.response?.data?.detail) {
+                console.log("Validation details:", error.response.data.detail);
+            }
         }
-
-        setMessage("Uploading…");
-
-        try {
-            const data = await uploadPDF(file);
-
-            setMessage(data.message || "Uploaded successfully");
-            setIsUploaded(true);
-            setUploadedFileName(file.name);
-        } catch (err) {
-            console.error(err);
-            setMessage("Upload failed. Please try again.");
-        }
-    };
-//     const uploadPDF = async () => {
-//     if (!file) {
-//       alert("Please select a PDF first.");
-//       return;
-//     }
-
-//     const formData = new FormData();
-//     formData.append("file", file);
-//     setMessage("Uploading…");
-
-//     try {
-//       const response = await fetch("http://127.0.0.1:8000/upload", {
-//         method: "POST",
-//         body: formData,
-//       });
-
-//       const data = await response.json();
-
-//       if (response.ok) {
-//         setMessage(data.message || "Uploaded successfully");
-//         setIsUploaded(true);
-//         setUploadedFileName(file.name);
-//       } else {
-//         setMessage("Upload failed. Please try again.");
-//       }
-//     } catch (err) {
-//       console.error(err);
-//       setMessage("Upload failed. Server may be offline.");
-//     }
-//   };
+        // try {
+        //   const response = await fetch("http://127.0.0.1:8000/upload", {
+        //     method: "POST",
+        //     body: formData,
+        //   });
+        // } catch (err) {
+    //   console.error(err);
+    //   setMessage("Upload failed. Server may be offline.");
+    // }
+  };
 
     return (
         <div className='mainpage'>
@@ -207,7 +215,7 @@ function MainPage({pages,showPage,currentType,pageTitle,showAI,setShowAI,setpage
                                 <>
                                 <div className="pdfoptions1">
                                     <button onClick={closePdf}><MdOutlineDeleteForever/></button>
-                                    <button onClick={uploadPDF}><IoMdCloudUpload/></button>
+                                    <button onClick={handleUploadPDF}><IoMdCloudUpload/></button>
                                 </div>
                                 <iframe className="pdfViewer"src={pdfUrl} width="100%" height="600px" title="PDF Viewer"> margin=0</iframe>
                                 </>
