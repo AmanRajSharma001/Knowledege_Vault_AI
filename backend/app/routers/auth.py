@@ -5,6 +5,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi import APIRouter, UploadFile, File
 from app.pipeline import process_pdf
+from app.RAG.pipeline import process_RAG_pdf
 from sqlalchemy.orm import Session
 
 
@@ -139,6 +140,16 @@ async def upload_pdf(file: UploadFile = File(...)):
     # 1. Read file into memory bytes
     pdf_bytes = await file.read()
     result=process_pdf(
+        pdf_bytes,
+        file.filename
+    )
+    return result
+
+@router.post("/RAG_start_work")
+async def UPLOAD_RAG_PDF(file: UploadFile = File(...)):
+    # 1. Read file into memory bytes
+    pdf_bytes = await file.read()
+    result=process_RAG_pdf(
         pdf_bytes,
         file.filename
     )

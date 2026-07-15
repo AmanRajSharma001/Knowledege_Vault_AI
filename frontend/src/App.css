@@ -1308,9 +1308,24 @@
   border-top: 1px solid var(--sb-border);
   box-sizing: border-box;
   background-color: #191919;
+  
 }
-
+.pdfName{
+  display:flex;
+  border:1px solid grey;
+  padding: 0px 12px;
+  border-radius: 8px;
+  background-color: var(--sb-input-bg);
+  color: var(--sb-text);
+  font-family: var(--sb-font);
+  font-size: 14px;
+  align-items:center;
+}
+.pdfName svg{
+  width:35px;
+}
 .aiInput {
+  margin-top:5px;
   display: flex;
   flex-direction: column;
   background-color: var(--sb-input-bg);
@@ -1348,7 +1363,19 @@
   justify-content: space-between;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   padding-top: 8px;
+
 }
+.attachment-icon{
+  
+  font-weight: 500;
+  color: var(--sb-muted);
+  user-select: none;
+}
+.attachment-icon:hover{
+  color:rgba(255, 255, 255, 0.897);
+  cursor:pointer;
+}
+
 
 .aiModel {
   font-size: 11px;

@@ -1,21 +1,21 @@
-from RAG.storage import upload_pdf_to_supabase
+from app.RAG.storage import upload_pdf_to_supabase
 
-from RAG.pdf_processor import (
+from app.RAG.pdf_processor import (
     extract_text_from_bytes,
     splitting_the_text
 )
 
-from RAG.embeddings import (
+from app.RAG.embeddings import (
     transforming_sentences,
     cos_sim_similarity
 )
 
-from RAG.chunker import chunking_the_text
+from app.RAG.chunker import chunking_the_text
 
-from RAG.vector_store import storing_into_faiss
+from app.RAG.vector_store import storing_into_faiss
 
 
-def process_pdf(pdf_bytes, filename):
+def process_RAG_pdf(pdf_bytes, filename):
 
     # Store original PDF
     upload_pdf_to_supabase(

@@ -58,7 +58,7 @@ google-ai-generativelanguage==0.6.15
 google-api-core==2.31.0
 google-api-python-client==2.197.0
 google-auth==2.53.0
-google-auth-faiss-cpu==1.14.2
+# google-auth-faiss-cpu==1.14.2
 filelock==3.29.1
 fsspec==2026.4.0
 hf-xet==1.5.0

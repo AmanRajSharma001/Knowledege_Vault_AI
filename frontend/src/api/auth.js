@@ -23,3 +23,10 @@ export const uploadPDF = async (file) => {
     const response = await api.post("/auth/upload", formData);
     return response.data;
 };
+export const UPLOAD_RAG_PDF = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await api.post("/auth/RAG_start_work", formData);
+    return response.data;
+};

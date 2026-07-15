@@ -14,8 +14,10 @@ import { SlLock } from 'react-icons/sl';
 import { MdOutlineAddReaction, MdOutlineAddPhotoAlternate } from 'react-icons/md';
 import { FaFileUpload } from 'react-icons/fa';
 import { MdOutlineDeleteForever } from 'react-icons/md';
-import { page_data_title } from "../api/auth";
 import { IoMdCloudUpload } from 'react-icons/io';
+import { FaRegFilePdf } from 'react-icons/fa6';
+
+import { page_data_title } from "../api/auth";
 import { uploadPDF } from "../api/auth";
 
 function MainPage({pages,showPage,currentType,pageTitle,showAI,setShowAI,setpageTitle,page_Data,setpageData,focusTitle,setfocusTitle,
@@ -230,7 +232,7 @@ function MainPage({pages,showPage,currentType,pageTitle,showAI,setShowAI,setpage
                     <div className='bottom-options'>
                         <button><FaRegFaceKiss/>Ask AI</button>
                         {/* <button><PiFileAudioFill/>AI Meeting Notes </button> */}
-                        <button onClick={openFileExplorer}><PiFileAudioFill/>Upload PDF </button>
+                        <button onClick={openFileExplorer}><FaRegFilePdf/>Upload PDF </button>
                         
                         <button><FaTableCells/>Database</button>
                         <button><LuNotepadText/>Form</button>

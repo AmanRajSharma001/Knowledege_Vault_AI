@@ -1,14 +1,14 @@
 from fastapi import APIRouter, UploadFile, File
-from RAG.pipeline import process_pdf
+from app.RAG.pipeline import process_RAG_pdf
 
 # Create a router instance for handling upload-related features
 router = APIRouter()
 
 @router.post("/upload")
-async def upload_pdf(file: UploadFile = File(...)):
+async def UPLOAD_RAG_PDF(file: UploadFile = File(...)):
     # 1. Read file into memory bytes
     pdf_bytes = await file.read()
-    result=process_pdf(
+    result=process_RAG_pdf(
         pdf_bytes,
         file.filename
     )
