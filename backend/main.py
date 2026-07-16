@@ -6,7 +6,7 @@ from fastapi import FastAPI, Depends
 # Since our React frontend runs on 'http://localhost:5173' and our FastAPI backend runs on 'http://localhost:8000',
 # browsers block requests unless CORS is explicitly configured. We allow our React port to make requests.
 from fastapi.middleware.cors import CORSMiddleware
-
+from app.RAG.upload import router as upload_router  # Import the upload router
 from app.database import engine
 from app import models
 from app.routers import auth
