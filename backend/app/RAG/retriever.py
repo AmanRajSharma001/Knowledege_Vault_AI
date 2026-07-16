@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from RAG.vector_store import search_faiss
-from RAG.llm import generate_answer, FALLBACK_UNAVAILABLE
+from app.RAG.vector_store import search_faiss
+from app.RAG.llm import generate_answer, FALLBACK_UNAVAILABLE
 
 router = APIRouter()
 

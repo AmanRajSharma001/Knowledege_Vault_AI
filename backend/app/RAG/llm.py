@@ -83,3 +83,28 @@ def generate_answer(query_str: str, chunks: list) -> str:
 if __name__ == "__main__":
     ans = generate_answer("What is the capital of France?", ["France is a country in Europe. Paris is its capital."])
     print(ans)
+
+#=========================
+import os
+import requests
+
+API_URL = "https://router.huggingface.co/v1/chat/completions"
+headers = {
+    "Authorization": f"Bearer {os.environ['HF_TOKEN']}",
+}
+
+def query(payload):
+    response = requests.post(API_URL, headers=headers, json=payload)
+    return response.json()
+
+response = query({
+    "messages": [
+        {
+            "role": "user",
+            "content": "What is the capital of France?" 
+        }
+    ],
+    "model": "deepreinforce-ai/Ornith-1.0-35B:deepinfra"
+})
+
+print(response["choices"][0]["message"])

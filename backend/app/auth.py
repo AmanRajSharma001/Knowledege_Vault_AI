@@ -55,13 +55,3 @@ def verify_access_token(token: str):
             status_code=401,
             detail="Invalid token"
         )
-
-# here will all these function will come
-# 
-# POST /signup
-
-# POST /login
-
-# POST /refresh
-
-# POST /logout

@@ -2,7 +2,7 @@ import faiss
 import numpy as np
 import os
 import json
-from RAG.embeddings import transforming_sentences
+from app.RAG.embeddings import transforming_sentences
 
 def storing_into_faiss(chunk_embeddings,chunk_texts):
     chunk_embeddings=np.array(

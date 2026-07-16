@@ -23,10 +23,25 @@ export const uploadPDF = async (file) => {
     const response = await api.post("/auth/upload", formData);
     return response.data;
 };
-export const UPLOAD_RAG_PDF = async (file) => {
-    const formData = new FormData();
-    formData.append("file", file);
 
-    const response = await api.post("/auth/RAG_start_work", formData);
+export const UPLOAD_RAG_PDF = async (formData) => {
+    const response = await api.post(
+        "/auth/RAG_start_work",
+        formData
+    );
     return response.data;
 };
+// export const UPLOAD_RAG_PDF = async (file) => {
+//     const formData = new FormData();
+//     formData.append("file", file);
+
+//     const response = await api.post("/auth/RAG_start_work", formData);
+//     return response.data;
+// };
+
+export const ask_question = async (data) => {
+    const response = await api.post(
+        "/auth/RAG_Query",data
+    )
+    return response.data
+}

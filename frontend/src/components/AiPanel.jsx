@@ -6,79 +6,40 @@ import { ImAttachment } from 'react-icons/im';
 import { IoChatbubbleOutline } from "react-icons/io5";
 import { LuLibraryBig, LuSparkles, LuLanguages, LuPresentation, LuChartLine } from "react-icons/lu";
 
+
 import { UPLOAD_RAG_PDF } from "../api/auth";
+import { ask_question } from "../api/auth"
+// ==================================
+// AI Message + Response Function
+// ==================================
+    const [messages, setMessages] = useState([]);
+    const [query, setQuery] = useState("");
+    const [isTyping, setIsTyping] = useState(false);
+    const [isSending, setIsSending] = useState(false);
+    const [llmResponse,setLlmResposne] = useState("")
+
+    try {
+        const response = await ask_question(query)
+        setLlmResposne(response)
+        let chatVal = {"user":query,"Llm":response}
+        setMessages(prev => [...prev, chatVal])
+        } catch (err) {
+        console.error(err);
+        const errMsg = {
+            id: Date.now() + 1,
+            sender: "assistant",
+            text: "The AI service is currently unavailable. Please try again later.",
+        };
+        setMessages(prev => [...prev, errMsg]);
+        } finally {
+        setIsTyping(false);
+        setIsSending(false);
+        }
+
 
 function AiPanel({ onClose }) {
 
-    //trying adding rag into ai chat
-    // const [message,setmessage]=useState("")
-    // const [messages, setMessages] = useState([]);
-    // const [isUploaded, setIsUploaded] = useState(false);
-    // const [query, setQuery] = useState("");
-    // const [isTyping, setIsTyping] = useState(false);
-    // const [uploadedFileName, setUploadedFileName] = useState("");
-    // const messagesEndRef = useRef(null);
-    // const [isSending, setIsSending] = useState(false);
-    // const textareaRef = useRef(null);
-    // useEffect(() => {
-    //     if (messagesEndRef.current) {
-    //         messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    //     }
-    // }, [messages, isTyping]);
-    // useEffect(() => {
-    //     const ta = textareaRef.current;
-    //     if (ta) {
-    //     ta.style.height = 'auto';
-    //     ta.style.height = Math.min(ta.scrollHeight, 200) + 'px';
-    //     }
-    // }, [query]);
-    // const handleSendd = async () => {
-    //     const trimmed = query.trim();
-    //     if (!trimmed || isSending) return;
-
-    //     const userMsg = { id: Date.now(), sender: "user", text: trimmed };
-    //     setMessages(prev => [...prev, userMsg]);
-    //     setQuery("");
-    //     setIsSending(true);
-    //     setIsTyping(true);
-    // try {
-
-    //     const response = await fetch("http://127.0.0.1:8000/ask", {
-    //         method: "POST",
-    //         headers: { "Content-Type": "application/json" },
-    //         body: JSON.stringify({ question: trimmed }),
-    //     });
-
-    //     let aiText = "The AI service is currently unavailable. Please try again later.";
-
-    //     if (response.ok) {
-    //         const data = await response.json();
-    //         if (data.answer) {
-    //         aiText = data.answer;
-    //         }
-    //     } else if (response.status === 503) {
-    //         aiText = "The AI service is currently unavailable. Please try again later.";
-    //     }
-
-    //     const aiMsg = { id: Date.now() + 1, sender: "assistant", text: aiText };
-    //     setMessages(prev => [...prev, aiMsg]);
-    //     } catch (err) {
-    //     console.error(err);
-    //     const errMsg = {
-    //         id: Date.now() + 1,
-    //         sender: "assistant",
-    //         text: "The AI service is currently unavailable. Please try again later.",
-    //     };
-    //     setMessages(prev => [...prev, errMsg]);
-    //     } finally {
-    //     setIsTyping(false);
-    //     setIsSending(false);
-    //     }
-    // };
-    // --------------------------------
-
     const [animate, setAnimate] = useState(false);
-    const [inputValue, setInputValue] = useState("");
     const [chats,setchats]=useState([])
 
     useEffect(() => {
@@ -128,7 +89,7 @@ function AiPanel({ onClose }) {
         setMessage("Uploading…");
     
         try{
-            const data = await UPLOAD_RAG_PDF(file)
+            const data = await UPLOAD_RAG_PDF(formData)
     
             
             setMessage(data.message || "Uploaded successfully");
@@ -205,7 +166,7 @@ function AiPanel({ onClose }) {
                             className="aiTextarea" 
                             placeholder="Do anything with AI..." 
                             value={inputValue} 
-                            onChange={(e) => setInputValue(e.target.value)}
+                            onChange={(e) => setQuery(e.target.value)}
                             onKeyDown={(e) => {
                                 if (e.key === "Enter" && !e.shiftKey) {
                                     e.preventDefault();
@@ -215,9 +176,9 @@ function AiPanel({ onClose }) {
                         />
                         <div className="aiControls">
                             <button className="attachment-icon" onClick={(openFileExplorer)}><ImAttachment/></button>
-                            <input type="file" ref={fileinputRef} accept="application/pdf" onChange={handlefilechange} style={{display:'none'}} />
+                            <input type="file" ref={fileinputRef} accept="application/pdf" onChange={()=>handlefilechange} style={{display:'none'}} />
                             <span className="aiModel">Knowledge Assistant</span>
-                            <button type="submit" className="aiSend" onClick={handleUploadPDF} disabled={!inputValue.trim()}>
+                            <button type="submit" className="aiSend" onClick={handleUploadPDF}>
                                 <BsSend />
                             </button>
                         </div>
