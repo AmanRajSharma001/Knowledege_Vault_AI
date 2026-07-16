@@ -4,6 +4,9 @@ from fastapi import APIRouter, UploadFile, File
 from app.RAG.pipeline import process_RAG_pdf
 from sqlalchemy.orm import Session
 from app.RAG.retriever import ask_question
+from app.RAG.vector_store import search_faiss
+from app.RAG.llm import generate_answer, FALLBACK_UNAVAILABLE
+from app.schemas import QueryRequest,AskRequest
 
 from app.database import get_db
 from app.models import User,Page
@@ -116,7 +119,21 @@ async def UPLOAD_RAG_PDF(file: UploadFile = File(...)):
     return result
 
 @router.post("/RAG_Query")
-async def question_ask(data):
-    result = ask_question(data)
-    return result
+async def question_ask(request: AskRequest):
+    """Primary chat endpoint called by the frontend."""
+    try:
+        retrieved_chunks = search_faiss(request.question)
+        retrieved_chunks = [c.strip() for c in retrieved_chunks if c and c.strip()]
+
+        if not retrieved_chunks:
+            return {"answer": "I could not find that information in the uploaded document."}
+
+        answer = generate_answer(request.question, retrieved_chunks)
+        return {"answer": answer}
+
+    except Exception:
+        return {"answer": FALLBACK_UNAVAILABLE}
+# async def question_ask(data):
+#     result = ask_question(data)
+#     return result
 

@@ -17,23 +17,24 @@ import { ask_question } from "../api/auth"
     const [isTyping, setIsTyping] = useState(false);
     const [isSending, setIsSending] = useState(false);
     const [llmResponse,setLlmResposne] = useState("")
-
-    try {
-        const response = await ask_question(query)
-        setLlmResposne(response)
-        let chatVal = {"user":query,"Llm":response}
-        setMessages(prev => [...prev, chatVal])
-        } catch (err) {
-        console.error(err);
-        const errMsg = {
-            id: Date.now() + 1,
-            sender: "assistant",
-            text: "The AI service is currently unavailable. Please try again later.",
-        };
-        setMessages(prev => [...prev, errMsg]);
-        } finally {
-        setIsTyping(false);
-        setIsSending(false);
+    const ASKQuery=async()=>{
+        try {
+            const response = await ask_question(query)
+            setLlmResposne(response)
+            let chatVal = {"user":query,"Llm":response}
+            setMessages(prev => [...prev, chatVal])
+            } catch (err) {
+            console.error(err);
+            const errMsg = {
+                id: Date.now() + 1,
+                sender: "assistant",
+                text: "The AI service is currently unavailable. Please try again later.",
+            };
+            setMessages(prev => [...prev, errMsg]);
+            } finally {
+            setIsTyping(false);
+            setIsSending(false);
+            }
         }
 
 
@@ -178,7 +179,9 @@ function AiPanel({ onClose }) {
                             <button className="attachment-icon" onClick={(openFileExplorer)}><ImAttachment/></button>
                             <input type="file" ref={fileinputRef} accept="application/pdf" onChange={()=>handlefilechange} style={{display:'none'}} />
                             <span className="aiModel">Knowledge Assistant</span>
-                            <button type="submit" className="aiSend" onClick={handleUploadPDF}>
+                            <button type="submit" className="aiSend" onClick={()=>{
+                                handleUploadPDF();ASKQuery();
+                            }}>
                                 <BsSend />
                             </button>
                         </div>
