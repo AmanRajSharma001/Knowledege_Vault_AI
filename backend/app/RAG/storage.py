@@ -12,7 +12,7 @@ supabase = create_client(
     SUPABASE_KEY
 )
 
-BUCKET_NAME = "pdfs"
+BUCKET_NAME = "notionstorage"
 
 def upload_pdf_to_supabase(pdf_bytes, filename):
 

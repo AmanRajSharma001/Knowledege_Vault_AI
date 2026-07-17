@@ -46,3 +46,11 @@ class PageResponse(BaseModel):
     page_type:str
     page_data:str
     parent_page_id: Optional[int] = None
+
+
+class QueryRequest(BaseModel):
+    query: str
+
+
+class AskRequest(BaseModel):
+    question: str
