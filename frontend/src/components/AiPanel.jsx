@@ -12,18 +12,28 @@ import { ask_question } from "../api/auth"
 // ==================================
 // AI Message + Response Function
 // ==================================
+
+
+
+function AiPanel({ onClose }) {
+    
+    const [animate, setAnimate] = useState(false);
+    const [chats,setchats]=useState([])
     const [messages, setMessages] = useState([]);
     const [query, setQuery] = useState("");
     const [isTyping, setIsTyping] = useState(false);
     const [isSending, setIsSending] = useState(false);
-    const [llmResponse,setLlmResposne] = useState("")
-    const ASKQuery=async()=>{
+    const [llmResponse,setLlmResponse] = useState("");
+
+    const rag_qeury = async ()=>{
         try {
-            const response = await ask_question(query)
-            setLlmResposne(response)
+            const response = await ask_question({"question":query})
+            setLlmResponse(response)
             let chatVal = {"user":query,"Llm":response}
             setMessages(prev => [...prev, chatVal])
-            } catch (err) {
+            console.log(response) //Checking messages data
+            } 
+        catch (err) {
             console.error(err);
             const errMsg = {
                 id: Date.now() + 1,
@@ -34,18 +44,11 @@ import { ask_question } from "../api/auth"
             } finally {
             setIsTyping(false);
             setIsSending(false);
-            }
         }
-
-
-function AiPanel({ onClose }) {
-
-    const [animate, setAnimate] = useState(false);
-    const [chats,setchats]=useState([])
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setAnimate(true);
+    }
+        useEffect(() => {
+            const timer = setTimeout(() => {
+                setAnimate(true);
         }, 10);
         return () => clearTimeout(timer);
     }, []);
@@ -57,8 +60,8 @@ function AiPanel({ onClose }) {
 
     const handleSend = (e) => {
         e.preventDefault();
-        if (inputValue.trim()) {
-            setInputValue("");
+        if (query.trim()) {
+            setQuery("");
         }
     };
     // opening file explorer to input the file
@@ -166,7 +169,7 @@ function AiPanel({ onClose }) {
                         <textarea 
                             className="aiTextarea" 
                             placeholder="Do anything with AI..." 
-                            value={inputValue} 
+                            value={query} 
                             onChange={(e) => setQuery(e.target.value)}
                             onKeyDown={(e) => {
                                 if (e.key === "Enter" && !e.shiftKey) {
@@ -177,11 +180,9 @@ function AiPanel({ onClose }) {
                         />
                         <div className="aiControls">
                             <button className="attachment-icon" onClick={(openFileExplorer)}><ImAttachment/></button>
-                            <input type="file" ref={fileinputRef} accept="application/pdf" onChange={()=>handlefilechange} style={{display:'none'}} />
+                            <input type="file" ref={fileinputRef} accept="application/pdf" onChange={handlefilechange} style={{display:'none'}} />
                             <span className="aiModel">Knowledge Assistant</span>
-                            <button type="submit" className="aiSend" onClick={()=>{
-                                handleUploadPDF();ASKQuery();
-                            }}>
+                            <button type="submit" className="aiSend" onClick={()=>{handleUploadPDF();rag_qeury()}}>
                                 <BsSend />
                             </button>
                         </div>

@@ -13,6 +13,12 @@ from app.models import User,Page
 from app.dependencies import get_current_user
 from app.schemas import UserCreate, UserResponse,UserLogin, Token,PageData,PageResponse
 from app.auth import hash_password,verify_password, create_access_token
+
+from app.RAG.vector_store import search_faiss
+from app.RAG.llm import generate_answer, FALLBACK_UNAVAILABLE
+
+from app.schemas import AskRequest,QueryRequest
+
 router = APIRouter(
     prefix="/auth",
     tags=["Authentication"]
@@ -119,7 +125,7 @@ async def UPLOAD_RAG_PDF(file: UploadFile = File(...)):
     return result
 
 @router.post("/RAG_Query")
-async def question_ask(request: AskRequest):
+async def ask_question(request: AskRequest):
     """Primary chat endpoint called by the frontend."""
     try:
         retrieved_chunks = search_faiss(request.question)
@@ -133,7 +139,5 @@ async def question_ask(request: AskRequest):
 
     except Exception:
         return {"answer": FALLBACK_UNAVAILABLE}
-# async def question_ask(data):
-#     result = ask_question(data)
-#     return result
+    
 
