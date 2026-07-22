@@ -1184,12 +1184,13 @@
   flex-direction: column;
   box-sizing: border-box;
   flex-shrink: 0;
+  position: relative;
 }
 
 .aiPanel.open {
-  width: 360px;
+  width: 380px;
   opacity: 1;
-  border-left: 1px solid var(--sb-border);
+  border-left: 1px solid var(--sb-border, rgba(255, 255, 255, 0.1));
 }
 
 .aiTop {
@@ -1197,53 +1198,187 @@
   align-items: center;
   justify-content: space-between;
   padding: 14px 18px;
-  border-bottom: 1px solid var(--sb-border);
+  border-bottom: 1px solid var(--sb-border, rgba(255, 255, 255, 0.1));
   height: 48px;
   box-sizing: border-box;
+  background-color: #191919;
+  z-index: 10;
+  flex-shrink: 0;
 }
 
 .aiTop h3 {
   margin: 0;
   font-size: 14px;
   font-weight: 600;
-  color: var(--sb-text);
+  color: var(--sb-text, #ffffff);
+}
+
+.aiTopTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.aiModeToggle {
+  display: flex;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.aiModeBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.aiModeBtn.active {
+  background: #2383e2;
+  color: #ffffff;
+}
+
+.aiModeBanner {
+  font-size: 12px;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 6px 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.aiModeNotice {
+  color: #f59e0b;
+}
+
+.aiBubbleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  max-width: 82%;
+}
+
+.aiBubbleContainer .aiBubble {
+  max-width: 100%;
+}
+
+.aiAskInsteadBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(35, 131, 226, 0.15);
+  border: 1px solid rgba(35, 131, 226, 0.35);
+  color: #60a5fa;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 4px;
+}
+
+.aiAskInsteadBtn:hover {
+  background: rgba(35, 131, 226, 0.3);
+  color: #ffffff;
+  border-color: #2383e2;
 }
 
 .aiClose {
   background: none;
   border: none;
-  color: var(--sb-muted);
+  color: var(--sb-muted, #94a3b8);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 6px;
   border-radius: 4px;
-  transition: background-color var(--sb-transition), color var(--sb-transition);
+  transition: background-color var(--sb-transition, 0.2s ease), color var(--sb-transition, 0.2s ease);
 }
 
 .aiClose:hover {
-  background-color: var(--sb-hover);
-  color: var(--sb-text);
+  background-color: var(--sb-hover, rgba(255, 255, 255, 0.08));
+  color: var(--sb-text, #ffffff);
 }
 
+/* Sticky Navbar for Suggestion Buttons in Chat Mode */
+.aiNavbar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(25, 25, 25, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 9;
+  flex-shrink: 0;
+}
+
+.aiNavOptions {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  width: 100%;
+}
+
+.aiNavOptions::-webkit-scrollbar {
+  display: none;
+}
+
+.aiNavOptionBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  padding: 5px 10px;
+  border-radius: 16px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.aiNavOptionBtn:hover {
+  background: rgba(35, 131, 226, 0.15);
+  border-color: rgba(35, 131, 226, 0.4);
+  color: #ffffff;
+}
+
+/* Main Body Container */
 .aiMain {
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  padding: 24px 18px;
   box-sizing: border-box;
-  justify-content: center;
+  position: relative;
 }
 
+/* Empty Landing State */
 .aiEmpty {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   gap: 16px;
-  margin-bottom: 40px;
+  margin: auto 0;
+  padding: 24px 18px;
 }
 
 .aiSparkle {
@@ -1266,7 +1401,7 @@
 .aiTitle {
   font-size: 18px;
   font-weight: 600;
-  color: var(--sb-text);
+  color: var(--sb-text, #ffffff);
   margin: 0 0 8px 0;
 }
 
@@ -1283,78 +1418,177 @@
   gap: 10px;
   padding: 10px 12px;
   background-color: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--sb-border);
+  border: 1px solid var(--sb-border, rgba(255, 255, 255, 0.1));
   border-radius: 6px;
-  color: var(--sb-text);
+  color: var(--sb-text, #ffffff);
   font-size: 13.5px;
   cursor: pointer;
   text-align: left;
-  transition: background-color var(--sb-transition);
+  transition: background-color var(--sb-transition, 0.2s ease);
   width: 100%;
 }
 
 .aiOption:hover {
-  background-color: var(--sb-hover);
+  background-color: var(--sb-hover, rgba(255, 255, 255, 0.08));
 }
 
 .aiOption .aiIcon {
   font-size: 16px;
-  color: var(--sb-icon-color);
+  color: var(--sb-icon-color, #94a3b8);
   flex-shrink: 0;
 }
 
-.aiBottom {
-  padding: 16px;
-  border-top: 1px solid var(--sb-border);
-  box-sizing: border-box;
-  background-color: #191919;
-  
-}
-.pdfName{
-  display:flex;
-  border:1px solid grey;
-  padding: 0px 12px;
-  border-radius: 8px;
-  background-color: var(--sb-input-bg);
-  color: var(--sb-text);
-  font-family: var(--sb-font);
-  font-size: 14px;
-  align-items:center;
-}
-.pdfName svg{
-  width:35px;
-}
-.aiInput {
-  margin-top:5px;
+/* Chat Messages Container */
+.aiMessages {
   display: flex;
   flex-direction: column;
-  background-color: var(--sb-input-bg);
-  border: 1px solid var(--sb-input-border);
+  gap: 16px;
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+/* Chat Message Items */
+.aiMessage {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.aiMessageUser {
+  justify-content: flex-end;
+}
+
+.aiMessageAI {
+  justify-content: flex-start;
+}
+
+.aiAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2383e2, #a855f7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.aiBubble {
+  max-width: 82%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.aiMessageUser .aiBubble {
+  background-color: #2383e2;
+  color: #ffffff;
+  border-bottom-right-radius: 4px;
+}
+
+.aiMessageAI .aiBubble {
+  background-color: #262626;
+  color: #f1f5f9;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom-left-radius: 4px;
+}
+
+/* Typing Indicator Animation */
+.aiTyping {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 16px;
+}
+
+.aiTyping .dot {
+  width: 6px;
+  height: 6px;
+  background-color: #94a3b8;
+  border-radius: 50%;
+  animation: aiTypingBlink 1.4s infinite ease-in-out both;
+}
+
+.aiTyping .dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.aiTyping .dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes aiTypingBlink {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+  40% { opacity: 1; transform: scale(1); }
+}
+
+/* Fixed Bottom Area (.aiBottom & .aiInputArea) */
+.aiBottom, .aiInputArea {
+  padding: 14px 16px;
+  border-top: 1px solid var(--sb-border, rgba(255, 255, 255, 0.1));
+  box-sizing: border-box;
+  background-color: #191919;
+  flex-shrink: 0;
+}
+
+.pdfName {
+  display: flex;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 4px 12px;
+  border-radius: 8px;
+  background-color: var(--sb-input-bg, #262626);
+  color: var(--sb-text, #ffffff);
+  font-family: var(--sb-font);
+  font-size: 13px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.pdfName svg {
+  width: 28px;
+  height: 28px;
+}
+
+.aiInput {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--sb-input-bg, #262626);
+  border: 1px solid var(--sb-input-border, rgba(255, 255, 255, 0.15));
   border-radius: 8px;
   padding: 8px 12px;
-  transition: border-color var(--sb-transition);
+  transition: border-color 0.2s ease;
 }
 
 .aiInput:focus-within {
-  border-color: var(--sb-accent);
+  border-color: var(--sb-accent, #2383e2);
 }
 
 .aiTextarea {
   background: none;
   border: none;
   outline: none;
-  color: var(--sb-text);
+  color: var(--sb-text, #ffffff);
   font-family: var(--sb-font);
-  font-size: 14px;
+  font-size: 13.5px;
   resize: none;
-  min-height: 60px;
+  min-height: 50px;
+  max-height: 120px;
   line-height: 1.4;
   padding: 0;
   margin-bottom: 8px;
 }
 
 .aiTextarea::placeholder {
-  color: var(--sb-muted);
+  color: var(--sb-muted, #94a3b8);
 }
 
 .aiControls {
@@ -1363,44 +1597,49 @@
   justify-content: space-between;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   padding-top: 8px;
-
 }
-.attachment-icon{
-  
+
+.attachment-icon {
+  background: none;
+  border: none;
   font-weight: 500;
-  color: var(--sb-muted);
+  color: var(--sb-muted, #94a3b8);
   user-select: none;
-}
-.attachment-icon:hover{
-  color:rgba(255, 255, 255, 0.897);
-  cursor:pointer;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
 }
 
+.attachment-icon:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
 
 .aiModel {
   font-size: 11px;
   font-weight: 500;
-  color: var(--sb-muted);
+  color: var(--sb-muted, #94a3b8);
   user-select: none;
 }
 
 .aiSend {
   background: none;
   border: none;
-  color: var(--sb-accent);
+  color: var(--sb-accent, #2383e2);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 4px;
   border-radius: 4px;
-  transition: opacity var(--sb-transition);
+  transition: opacity 0.2s ease;
 }
 
 .aiSend:disabled {
-  color: var(--sb-muted);
+  color: var(--sb-muted, #94a3b8);
   cursor: not-allowed;
-  opacity: 0.5;
+  opacity: 0.4;
 }
 
 .aiLauncher {

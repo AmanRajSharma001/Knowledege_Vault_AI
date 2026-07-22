@@ -128,16 +128,21 @@ async def UPLOAD_RAG_PDF(file: UploadFile = File(...)):
 async def ask_question(request: AskRequest):
     """Primary chat endpoint called by the frontend."""
     try:
+        if request.mode == "ai":
+            answer = generate_answer(request.question, chunks=[], mode="ai")
+            return {"answer": answer}
+
         retrieved_chunks = search_faiss(request.question)
         retrieved_chunks = [c.strip() for c in retrieved_chunks if c and c.strip()]
 
         if not retrieved_chunks:
             return {"answer": "I could not find that information in the uploaded document."}
 
-        answer = generate_answer(request.question, retrieved_chunks)
+        answer = generate_answer(request.question, retrieved_chunks, mode="rag")
         return {"answer": answer}
 
     except Exception:
         return {"answer": FALLBACK_UNAVAILABLE}
+
     
 
