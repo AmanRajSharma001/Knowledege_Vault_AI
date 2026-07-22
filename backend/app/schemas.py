@@ -54,3 +54,5 @@ class QueryRequest(BaseModel):
 
 class AskRequest(BaseModel):
     question: str
+    mode: Optional[str] = "rag"
+

@@ -30,26 +30,34 @@ def _call_hf(payload: dict) -> dict:
     return response.json()
 
 
-def generate_answer(query_str: str, chunks: list) -> str:
+def generate_answer(query_str: str, chunks: list, mode: str = "rag") -> str:
     """
-    Build a RAG prompt from retrieved chunks and query the LLM.
+    Build a RAG prompt or direct AI prompt and query the LLM.
 
     Returns a clean string answer. Never raises — all errors result in
     a user-friendly fallback message.
     """
-    if not chunks:
-        return FALLBACK_NOT_FOUND
+    if mode == "ai":
+        prompt = (
+            "You are a helpful, intelligent AI assistant. "
+            "Answer the question clearly and accurately:\n\n"
+            f"Question: {query_str}\n\n"
+            "Answer:"
+        )
+    else:
+        if not chunks:
+            return FALLBACK_NOT_FOUND
 
-    context = "\n\n".join(chunks)
+        context = "\n\n".join(chunks)
 
-    prompt = (
-        "You are a helpful assistant. Use only the context below to answer "
-        "the question. If the answer is not contained in the context, say "
-        "\"I could not find that information in the uploaded document.\"\n\n"
-        f"Context:\n{context}\n\n"
-        f"Question: {query_str}\n\n"
-        "Answer:"
-    )
+        prompt = (
+            "You are a helpful assistant. Use only the context below to answer "
+            "the question. If the answer is not contained in the context, say "
+            "\"I could not find that information in the uploaded document.\"\n\n"
+            f"Context:\n{context}\n\n"
+            f"Question: {query_str}\n\n"
+            "Answer:"
+        )
 
     payload = {
         "messages": [{"role": "user", "content": prompt}],
