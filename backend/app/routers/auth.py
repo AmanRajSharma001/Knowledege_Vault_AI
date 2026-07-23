@@ -4,6 +4,9 @@ from fastapi import APIRouter, UploadFile, File
 from app.RAG.pipeline import process_RAG_pdf
 from sqlalchemy.orm import Session
 from app.RAG.retriever import ask_question
+from app.RAG.vector_store import search_faiss
+from app.RAG.llm import generate_answer, FALLBACK_UNAVAILABLE
+from app.schemas import QueryRequest,AskRequest
 
 from app.database import get_db
 from app.models import User,Page
