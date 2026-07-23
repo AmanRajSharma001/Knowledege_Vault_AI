@@ -1,4 +1,3 @@
-
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css'
 import React, { useState, useRef, useEffect, useCallback } from "react";
@@ -8,12 +7,14 @@ import Login from "./pages/Login"
 import SignUp from "./pages/SignUp";
 import MainPage from './components/MainPage';
 import AiPanel from './components/AiPanel';
+
 function MainLayout() {
   // const [currentType,setCurrentType]=useState("Private")
-  const [showPage,setShowPage] = useState(null);
+  const [showPage, setShowPage] = useState(null);
   const [privates, setPrivates] = useState([]);
   const [agents, setAgents] = useState([]); 
-  const [pagetype,setPagetype]=useState("Private")
+  const [pagetype, setPagetype] = useState("Private");
+  const [focusTitle, setfocusTitle] = useState(false);
   const [name, setName] = useState("Virat");
   
   // -----------------------merging sidebar aggent and private with mainpage title------------------------
@@ -24,15 +25,15 @@ function MainLayout() {
   const pagedataInputRef = useRef(null);
 
   useEffect(() => {
-      if (activeId != null) {
-        titleInputRef.current?.focus();
-      }
-      // loadData();
-    },[activeId]);
-  
+    if (activeId != null) {
+      titleInputRef.current?.focus();
+    }
+    // loadData();
+  }, [activeId]);
   
   // const [Pages,setPages] = useState(pageData);
   const [showAI, setShowAI] = useState(false);
+  
   const addPage = useCallback(() => {
     const id = Date.now();
     setpages(prev => [...prev, { id, title: "", pagedata: "" }]);
@@ -40,20 +41,69 @@ function MainLayout() {
   }, []);
   
   const updatePage = useCallback((id, field, value) => {
+    setPrivates(prev => prev.map(p => (typeof p === "object" && p.id === id ? { ...p, [field]: value } : p)));
+    setAgents(prev => prev.map(a => (typeof a === "object" && a.id === id ? { ...a, [field]: value } : a)));
     setpages(prev => prev.map(p => (p.id === id ? { ...p, [field]: value } : p)));
   }, []);
   
-  const activePage = pages.find(p => p.id === activeId) || null;
+  const activePage =
+    (Array.isArray(privates) && privates.find(p => typeof p === "object" && p.id === activeId)) ||
+    (Array.isArray(agents) && agents.find(a => typeof a === "object" && a.id === activeId)) ||
+    (Array.isArray(pages) && pages.find(p => p.id === activeId)) ||
+    null;
+
+  const isAgentMode = pagetype === "Agent";
+
   return (
-    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden',backgroundColor: '#fff'}}>
-      <SideBar  setpages = { setpages } showPage = {showPage} setShowPage = {setShowPage}
-       pagetype={pagetype} setPagetype={setPagetype}
-       agents={agents} setAgents={setAgents} privates={privates} setPrivates={setPrivates} 
-      pages={pages} activeId={activeId} onAdd={addPage} onSelect={setActiveId}
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', backgroundColor: '#fff' }}>
+      <SideBar
+        setpages={setpages}
+        showPage={showPage}
+        setShowPage={setShowPage}
+        pagetype={pagetype}
+        setPagetype={setPagetype}
+        setfocusTitle={setfocusTitle}
+        agents={agents}
+        setAgents={setAgents}
+        privates={privates}
+        setPrivates={setPrivates}
+        pages={pages}
+        activeId={activeId}
+        onAdd={addPage}
+        onSelect={setActiveId}
       />
-      <MainPage pages = {pages} showPage = {showPage} pagetype={pagetype} setPagetype={setPagetype} showAI={showAI} setShowAI={setShowAI}
-      page={activePage} onChange={updatePage} titleInputRef={titleInputRef} pagedataInputRef={pagedataInputRef}/>
-      {showAI && <AiPanel onClose={() => setShowAI(false)} />}
+
+      {isAgentMode ? (
+        /* ── AGENT MODE: AI Panel fills the entire content area ── */
+        <AiPanel
+          mode="fullscreen"
+          onClose={() => {}}
+        />
+      ) : (
+        /* ── PRIVATE MODE: Editor + right-sidebar AI Panel ── */
+        <>
+          <MainPage
+            pages={pages}
+            showPage={showPage}
+            pagetype={pagetype}
+            setPagetype={setPagetype}
+            focusTitle={focusTitle}
+            setfocusTitle={setfocusTitle}
+            showAI={showAI}
+            setShowAI={setShowAI}
+            page={activePage}
+            onChange={updatePage}
+            titleInputRef={titleInputRef}
+            pagedataInputRef={pagedataInputRef}
+          />
+          {showAI && (
+            <AiPanel
+              mode="sidebar"
+              onClose={() => setShowAI(false)}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 }

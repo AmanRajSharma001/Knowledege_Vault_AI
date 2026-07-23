@@ -50,7 +50,7 @@ function MainPage({pages,showPage,currentType,pageTitle,showAI,setShowAI,setpage
     const [pagename,setPagename]=useState("")
     const [dataEntered,setDataentered]=useState("")
     const [user_id,setUser_id]=useState(1)
-    const [page_id,setPage_id]=useState(4)
+    const [page_id,setPage_id]=useState(7)
     // const [pagetype,setPagetype]=useState("private")
     const [parent_page_id,setParentPageId]=useState(null)
     const secondInputRef=useRef(null)

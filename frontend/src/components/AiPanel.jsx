@@ -13,7 +13,7 @@ import { ask_question } from "../api/auth";
 // ==================================
 
 
-function AiPanel({ onClose }) {
+function AiPanel({ onClose, mode = "sidebar" }) {
     const [animate, setAnimate] = useState(false);
     const [messages, setMessages] = useState([]);
     const [query, setQuery] = useState("");
@@ -217,7 +217,7 @@ function AiPanel({ onClose }) {
     ];
 
     return (
-        <div className={`aiPanel ${animate ? 'open' : ''}`}>
+        <div className={`aiPanel ${mode === 'fullscreen' ? 'fullscreen' : animate ? 'open' : ''}`}>
             {/* Top Bar Header with Mode Switcher */}
             <div className="aiTop">
                 <div className="aiTopTitleGroup">
@@ -243,9 +243,11 @@ function AiPanel({ onClose }) {
                     </div>
                 </div>
 
-                <button className="aiClose" onClick={handleClose} title="Close AI Panel">
-                    <RxDoubleArrowRight />
-                </button>
+                {mode !== 'fullscreen' && (
+                    <button className="aiClose" onClick={handleClose} title="Close AI Panel">
+                        <RxDoubleArrowRight />
+                    </button>
+                )}
             </div>
 
             {/* Sticky Navbar for Suggestion Buttons when Chat is Active */}

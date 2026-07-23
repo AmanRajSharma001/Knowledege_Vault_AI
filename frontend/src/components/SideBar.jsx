@@ -16,16 +16,124 @@ import { FaUserTie } from "react-icons/fa6";
 import { BsPencilSquare } from "react-icons/bs";
 import { RxDoubleArrowLeft } from "react-icons/rx";
 
+// ====================================INLINE EDITABLE ITEM=========================================
+
+function EditableSidebarItem({ placeholder, onSave, onCancel }) {
+    const [value, setValue] = useState("");
+    const isCommittedRef = useRef(false);
+
+    const handleSave = () => {
+        if (isCommittedRef.current) return;
+        isCommittedRef.current = true;
+        const trimmed = value.trim();
+        if (trimmed) {
+            onSave(trimmed);
+        } else {
+            onCancel();
+        }
+    };
+
+    const handleCancel = () => {
+        if (isCommittedRef.current) return;
+        isCommittedRef.current = true;
+        onCancel();
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            handleSave();
+        } else if (e.key === "Escape") {
+            e.preventDefault();
+            handleCancel();
+        }
+    };
+
+    return (
+        <div style={{ padding: "2px 0" }}>
+            <input
+                autoFocus
+                className="sb-inline-input"
+                type="text"
+                placeholder={placeholder}
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                onBlur={handleSave}
+            />
+        </div>
+    );
+}
+
+// ====================================SIDEBAR ITEM=========================================
+
+function SidebarItem({ item, icon: Icon, isActive, onSelect, isNested = false }) {
+    const title = typeof item === "string" ? item : item.title || "Untitled";
+    const itemId = typeof item === "string" ? item : item.id;
+
+    if (isNested) {
+        return (
+            <div className={`sb-page-row ${isActive ? "sb-page-row--active" : ""}`} onClick={() => onSelect(itemId, item)}>
+                <button className={`sb-nav-item sb-page-item sb-page-item--nested ${isActive ? "sb-nav-item--active" : ""}`}>
+                    <IoIosArrowForward className="sb-nav-icon sb-chevron-icon" />
+                    <span className="sb-nav-label">{title}</span>
+                </button>
+                <div className="sb-page-row-actions" onClick={(e) => e.stopPropagation()}>
+                    <button className="sb-icon-btn" title="Options"><BsThreeDots /></button>
+                    <button className="sb-icon-btn" title="New sub-page"><FaPlus /></button>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <button
+            className={`sb-nav-item sb-page-item ${isActive ? "sb-nav-item--active" : ""}`}
+            onClick={() => onSelect(itemId, item)}
+        >
+            {Icon && <Icon className="sb-nav-icon" />}
+            <span className="sb-nav-label">{title}</span>
+        </button>
+    );
+}
+
 // ====================================SIDEBAR RESIZE BAR=========================================
 
-function SideBar({Pages,setPages,showPage,setShowPage,
-    agents,setAgents,privates,setPrivates,pagename,setPagename,setPagetype,setfocusTitle,
-    pages, activeId, onAdd, onSelect}) {
-    const [filterPages,setFilterPages] = useState(Pages); //later work
+function SideBar({
+    Pages, setPages, showPage, setShowPage,
+    agents: propAgents, setAgents: propSetAgents,
+    privates: propPrivates, setPrivates: propSetPrivates,
+    pagename, setPagename, setPagetype, setfocusTitle,
+    pages, activeId, onAdd, onSelect
+}) {
+    const [filterPages, setFilterPages] = useState(Pages); //later work
+
+    // Local fallback state if props are not provided
+    const [internalAgents, setInternalAgents] = useState([
+        { id: "agent-1", title: "Agent A" },
+        { id: "agent-2", title: "Agent B" }
+    ]);
+    const agents = (propAgents && propAgents.length > 0) ? propAgents : internalAgents;
+    const setAgents = (newAgents) => {
+        setInternalAgents(newAgents);
+        if (propSetAgents) propSetAgents(newAgents);
+    };
+
+    const [internalPrivates, setInternalPrivates] = useState([
+        { id: "private-1", title: "Page 1" },
+        { id: "private-2", title: "Page 2" }
+    ]);
+    const privates = (propPrivates && propPrivates.length > 0) ? propPrivates : internalPrivates;
+    const setPrivates = (newPrivates) => {
+        setInternalPrivates(newPrivates);
+        if (propSetPrivates) propSetPrivates(newPrivates);
+    };
+
     const [userName, setuserName] = useState("Virat");
     const [width, setWidth] = useState(270);
     const [isResizing, setIsResizing] = useState(false);
     const dragInfo = useRef({ startX: 0, startWidth: 0 });
+
     const startResize = useCallback((e) => {
         e.preventDefault();
         setIsResizing(true);
@@ -45,6 +153,7 @@ function SideBar({Pages,setPages,showPage,setShowPage,
             const newWidth = dragInfo.current.startWidth + deltaX;
             setWidth(Math.max(220, Math.min(480, newWidth)));
         };
+
         // =====================WHEN BUTTON IS RELEASED
         const handleMouseUp = () => {
             setIsResizing(false);
@@ -63,7 +172,6 @@ function SideBar({Pages,setPages,showPage,setShowPage,
 
     const [showoptions, setShowOptions] = useState("Home");
 
-    const [showAgent, setshowAgent] = useState(false);
     // const [showInput, setshowInput] = useState(false);
     const [agentName, setagentName] = useState("");
     const addAgent = () => {
@@ -73,8 +181,8 @@ function SideBar({Pages,setPages,showPage,setShowPage,
             console.log("Agent clicked");
 
             setAgents(newAgents);
-            setPagetype("Agents")
-            setfocusTitle(true)
+            if (setPagetype) setPagetype("Agents");
+            if (setfocusTitle) setfocusTitle(true);
             setagentName("");
             // setshowInput(false);
             // submit(privates, newAgents);
@@ -82,7 +190,6 @@ function SideBar({Pages,setPages,showPage,setShowPage,
     };
     const [showArrow, setshowArrow] = useState(false);
 
-    const [showPrivate, setshowPrivate] = useState(false);
     const [showPrivateInput, setshowPrivateInput] = useState(false);
     const [privateName, setprivateName] = useState("");
 
@@ -91,12 +198,71 @@ function SideBar({Pages,setPages,showPage,setShowPage,
         if (privateName.trim() !== "") {
             const newPrivates = [...privates, privateName];
             // setPagetype("Privates")
-            setfocusTitle(true)
+            if (setfocusTitle) setfocusTitle(true);
             setPrivates(newPrivates);
             setprivateName("");
             setshowPrivateInput(false);
             // submit(agents,newPrivates);
         }
+    };
+
+    // Independent state for AGENTS section
+    const [showAgent, setshowAgent] = useState(true);
+    const [isCreatingAgent, setIsCreatingAgent] = useState(false);
+    const [selectedAgentId, setSelectedAgentId] = useState(null);
+
+    // Independent state for PRIVATE section
+    const [showPrivate, setshowPrivate] = useState(true);
+    const [isCreatingPrivate, setIsCreatingPrivate] = useState(false);
+    const [selectedPrivateId, setSelectedPrivateId] = useState(null);
+
+    // Agent Creation Logic
+    const handleSaveAgent = (name) => {
+        const newAgent = { id: `agent-${Date.now()}`, title: name, pagedata: "" };
+        const updated = [...agents, newAgent];
+        setAgents(updated);
+        setIsCreatingAgent(false);
+        setSelectedAgentId(newAgent.id);
+        if (setPagetype) setPagetype("Agent");
+        if (setfocusTitle) setfocusTitle(true);
+        if (onSelect) onSelect(newAgent.id);
+        if (setShowPage) setShowPage(newAgent.id);
+    };
+
+    const handleCancelAgent = () => {
+        setIsCreatingAgent(false);
+    };
+
+    // Private Page Creation Logic
+    const handleSavePrivate = (title) => {
+        const newPrivate = { id: `private-${Date.now()}`, title: title, pagedata: "" };
+        const updated = [...privates, newPrivate];
+        setPrivates(updated);
+        setIsCreatingPrivate(false);
+        setSelectedPrivateId(newPrivate.id);
+        if (setPagetype) setPagetype("Private");
+        if (setfocusTitle) setfocusTitle(true);
+        if (onSelect) onSelect(newPrivate.id);
+        if (setShowPage) setShowPage(newPrivate.id);
+    };
+
+    const handleCancelPrivate = () => {
+        setIsCreatingPrivate(false);
+    };
+
+    // Selection Handlers
+    const handleSelectAgent = (id, item) => {
+        setSelectedAgentId(id);
+        if (setPagetype) setPagetype("Agent");
+        if (onSelect) onSelect(id);
+        if (setShowPage) setShowPage(id);
+    };
+
+    const handleSelectPrivate = (id, item) => {
+        setSelectedPrivateId(id);
+        if (setPagetype) setPagetype("Private");
+        if (onSelect) onSelect(id);
+        if (setShowPage) setShowPage(id);
     };
 
     return (
@@ -114,7 +280,7 @@ function SideBar({Pages,setPages,showPage,setShowPage,
                             <span className="sb-workspace-name">{`${userName}'s Space`}</span>
                             <span><IoIosArrowDown className="sb-arrow-icon" /> </span>
                         </div>
-                            {/*===========BUTTON FINCTION FRO CLOSING SIDE BAR============== */}
+                        {/*===========BUTTON FINCTION FRO CLOSING SIDE BAR============== */}
                         <div className="sb-workspace-actions">
                             <button className="sb-icon-btn sb-collapse-btn" title="Close sidebar">
                                 <RxDoubleArrowLeft />
@@ -152,65 +318,97 @@ function SideBar({Pages,setPages,showPage,setShowPage,
                 <div className="sb-middle">
                     {/* =======================================AGENTS===================================================== */}
                     <div className="sb-section">
-                        <div className={`sb-section-header${showAgent ? " sb-section-header--open" : ""}`} onClick={() => setshowAgent(!showAgent)} >
+                        <div className={`sb-section-header${showAgent ? " sb-section-header--open" : ""}`} onClick={() => setshowAgent(!showAgent)}>
                             <button className="sb-section-arrow">
                                 {showAgent ? <IoIosArrowDown className="sb-arrow-icon" /> : <IoIosArrowForward className="sb-arrow-icon" />}
                             </button>
                             <span className="sb-section-title">Agents</span>
-                            <div className="sb-section-actions">
-                                <button className="sb-icon-btn" onClick={(e) => { e.stopPropagation(); }} title="Options">
+                            <div className="sb-section-actions" onClick={(e) => e.stopPropagation()}>
+                                <button className="sb-icon-btn" title="Options">
                                     <BsThreeDots />
                                 </button>
                                 {/* <button className="sb-icon-btn" onClick={(e) => { e.stopPropagation(); onAdd(); setshowAgent(true); }} title="New agent" >
                                     <FaPlus />
                                 </button> */}
+                                <button
+                                    className="sb-icon-btn"
+                                    onClick={() => {
+                                        setIsCreatingAgent(true);
+                                        setshowAgent(true);
+                                    }}
+                                    title="New agent"
+                                >
+                                    <FaPlus />
+                                </button>
                             </div>
                         </div>
+
                         {showAgent && (
                             <div className="sb-section-body">
-                                <button className="sb-nav-item sb-add-item" onClick={() => { onAdd(); setshowAgent(true); }} >
+                                <button
+                                    className="sb-nav-item sb-add-item"
+                                    onClick={() => {
+                                        setIsCreatingAgent(true);
+                                        setshowAgent(true);
+                                    }}
+                                >
                                     <FaPlus className="sb-nav-icon sb-add-icon" />
-                                    <span className="sb-nav-label"onClick={()=>setPagetype("Agent")}>New agent</span>
+                                    <span className="sb-nav-label" onClick={() => setPagetype && setPagetype("Agent")}>New agent</span>
                                 </button>
+
                                 {/* {showInput && (
                                     <input className="sb-inline-input" type="text" placeholder="Agent name…" value={agentName} onChange={(e) => setagentName(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") ;addAgent(); }}/>
                                     // <input className="sb-inline-input" type="text" placeholder="Agent name…" value={pagename} onChange={(e) => setPagename(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") addAgent(); autoFocus}}/>
                                 )} */}
-                                {agents.map((agent, index) => (
-                                    <button key={index} className="sb-nav-item sb-page-item">
-                                        <IoChatbubbleOutline className="sb-nav-icon" />
-                                        <span className="sb-nav-label">{agent}</span>
-                                    </button>
-                                ))}
-                                {(pages || []).map((p) => (
-                                    <button
-                                        key={p.id}
-                                        className={`sb-nav-item sb-page-item ${p.id === activeId ? "sb-nav-item--active" : ""}`}
-                                        onClick={() => onSelect(p.id)}
-                                    >
-                                        <IoChatbubbleOutline className="sb-nav-icon" />
-                                        <span className="sb-nav-label">{p.title || "New page"}</span>
-                                    </button>
-                                ))}
+
+                                {isCreatingAgent && (
+                                    <EditableSidebarItem
+                                        placeholder="Agent name…"
+                                        onSave={handleSaveAgent}
+                                        onCancel={handleCancelAgent}
+                                    />
+                                )}
+
+                                {agents.map((agent, index) => {
+                                    const itemObj = typeof agent === "string" ? { id: `agent-${index}`, title: agent } : agent;
+                                    const itemId = itemObj.id || `agent-${index}`;
+                                    const isActive = itemId === selectedAgentId || itemId === activeId;
+                                    return (
+                                        <SidebarItem
+                                            key={itemId}
+                                            item={itemObj}
+                                            icon={IoChatbubbleOutline}
+                                            isActive={isActive}
+                                            onSelect={handleSelectAgent}
+                                        />
+                                    );
+                                })}
                             </div>
                         )}
                     </div>
 
-                        {/* ==========================================PRIVATE========================================================== */}
+                    {/* ==========================================PRIVATE========================================================== */}
                     <div className="sb-section">
                         <div className={`sb-section-header${showPrivate ? " sb-section-header--open" : ""}`} onClick={() => setshowPrivate(!showPrivate)}>
                             <button className="sb-section-arrow">
                                 {showPrivate ? <IoIosArrowDown className="sb-arrow-icon" /> : <IoIosArrowForward className="sb-arrow-icon" />}
                             </button>
                             <span className="sb-section-title">Private</span>
-                            <div className="sb-section-actions">
-                                <button className="sb-icon-btn" onClick={(e) => e.stopPropagation()}title="Templates">
+                            <div className="sb-section-actions" onClick={(e) => e.stopPropagation()}>
+                                <button className="sb-icon-btn" title="Templates">
                                     <LuLibraryBig />
                                 </button>
-                                <button className="sb-icon-btn" onClick={(e) => e.stopPropagation()} title="Options">
+                                <button className="sb-icon-btn" title="Options">
                                     <BsThreeDots />
                                 </button>
-                                <button className="sb-icon-btn" onClick={(e) => { e.stopPropagation(); setshowPrivateInput(!showPrivateInput); setshowPrivate(true); }} title="New page">
+                                <button
+                                    className="sb-icon-btn"
+                                    onClick={() => {
+                                        setIsCreatingPrivate(true);
+                                        setshowPrivate(true);
+                                    }}
+                                    title="New page"
+                                >
                                     <FaPlus />
                                 </button>
                             </div>
@@ -222,33 +420,45 @@ function SideBar({Pages,setPages,showPage,setShowPage,
                                     <FaBookOpen className="sb-nav-icon" />
                                     <span className="sb-nav-label">The Notion Basics</span>
                                 </button>
-                                <button className="sb-nav-item sb-add-item" onClick={() => setshowPrivateInput(!showPrivateInput)} >
-                                {/* <button className="sb-nav-item sb-add-item" onClick={() => {onAdd(); setshowPrivateInput(true)}} > */}
+                                <button
+                                    className="sb-nav-item sb-add-item"
+                                    onClick={() => {
+                                        setIsCreatingPrivate(true);
+                                        setshowPrivate(true);
+                                    }}
+                                >
+                                    {/* <button className="sb-nav-item sb-add-item" onClick={() => {onAdd(); setshowPrivateInput(true)}} > */}
                                     <FaPlus className="sb-nav-icon sb-add-icon" />
                                     <span className="sb-nav-label">Add new</span>
                                 </button>
-                                {showPrivateInput && (
+
+                                {/* {showPrivateInput && (
                                     <input className="sb-inline-input" type="text" placeholder="Page title…" value={privateName} onChange={(e) => setprivateName(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") addPrivate(); }} autoFocus/>
                                     // <button className="sb-inline-input" type="text" placeholder="Page title…" value={privateName} onChange={(e) => setprivateName(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") addPrivate(); }} autoFocus/>
+                                )} */}
+
+                                {isCreatingPrivate && (
+                                    <EditableSidebarItem
+                                        placeholder="Page title…"
+                                        onSave={handleSavePrivate}
+                                        onCancel={handleCancelPrivate}
+                                    />
                                 )}
-                                {privates.map((privatee, index) => (
-                                    <button key={index} className="sb-nav-item sb-page-item">
-                                        <IoChatbubbleOutline className="sb-nav-icon" />
-                                        <span className="sb-nav-label">{privatee}</span>
-                                    </button>
-                                ))}
-                                {pages.map((page,index) => (
-                                    <div key={index} className="sb-page-row" onClick={()=>setShowPage(page.id)}>
-                                        <button className="sb-nav-item sb-page-item sb-page-item--nested">
-                                            <IoIosArrowForward className="sb-nav-icon sb-chevron-icon" />
-                                            <span className="sb-nav-label">{page.title}</span>
-                                        </button>
-                                        <div className="sb-page-row-actions">
-                                            <button className="sb-icon-btn" title="Options"><BsThreeDots /></button>
-                                            <button className="sb-icon-btn" title="New sub-page"><FaPlus /></button>
-                                        </div>
-                                    </div>
-                                ))}
+
+                                {privates.map((item, index) => {
+                                    const itemObj = typeof item === "string" ? { id: `private-${index}`, title: item } : item;
+                                    const itemId = itemObj.id || `private-${index}`;
+                                    const isActive = itemId === selectedPrivateId || itemId === activeId;
+                                    return (
+                                        <SidebarItem
+                                            key={itemId}
+                                            item={itemObj}
+                                            isNested={true}
+                                            isActive={isActive}
+                                            onSelect={handleSelectPrivate}
+                                        />
+                                    );
+                                })}
                             </div>
                         )}
                     </div>
@@ -269,8 +479,8 @@ function SideBar({Pages,setPages,showPage,setShowPage,
                         <span className="sb-nav-label">Trash</span>
                     </button>
                 </div>
-                    
-                        {/* =====================================SIDEBAR NEW CHAT=============================== */}
+
+                {/* =====================================SIDEBAR NEW CHAT=============================== */}
                 <div className="sb-footer">
                     <button className="sb-new-chat-btn">
                         <span className="sb-new-chat-label">New Chat</span>
@@ -281,7 +491,7 @@ function SideBar({Pages,setPages,showPage,setShowPage,
                 </div>
             </div>
 
-            <div className={`sidebar-dragger${isResizing ? " resizing" : ""}`} onMouseDown={startResize}/>
+            <div className={`sidebar-dragger${isResizing ? " resizing" : ""}`} onMouseDown={startResize} />
         </div>
     );
 }
